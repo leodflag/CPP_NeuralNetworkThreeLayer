@@ -8,6 +8,24 @@
 #include <math.h>
 #include "MatrixOpApi.hpp"
 using namespace std;
+void read_matrix_data(Matrix data){
+	ifstream file("data.csv"); //讀入檔案 
+	for(int row=0;row<data.data_row;row++){
+		string line;
+		if(!getline(file,line))  //從輸入流讀入一行到string變量，直到沒有0讀入字符、返回false
+			break;
+		stringstream iss(line);  //將一個字符串string變量line的值轉成istringstream類別iss
+		if(!iss.good())  //如果沒錯就回傳True
+			break;
+		for(int col=0;col<data.data_col;col++){
+			string val;
+			getline(iss,val,',');  //字串分割
+			stringstream stringConvertorStringstream(val);  //將一個字符串變量的值傳遞給istringstream對象
+			stringConvertorStringstream>>data.data_matrix[row][col];  //輸入到矩陣
+		}
+	}
+	file.close();	
+}
 Matrix create_new_matrix(int r,int c){ // 建立動態指標
 	Matrix Data;
 	Data.data_row=r;
@@ -68,6 +86,55 @@ Matrix matrix_tran_last_col_negative(Matrix Data){ //最後一行轉負值
 	}	
 	return Data;
 }
+Matrix matrix_delete_last_col_data(Matrix Data){  //刪除最後一直行 
+	Matrix Matrix_A=create_new_matrix(Data.data_row,Data.data_col-1);
+	for(int r=0;r<Data.data_row;r++){
+		for(int c=0;c<Data.data_col-1;c++){
+			Matrix_A.data_matrix[r][c]=Data.data_matrix[r][c];
+		}
+	}
+	return Matrix_A;
+}
+Matrix matrix_get_one_row_data(Matrix Matrix_1,int row){  //取得某row data
+	Matrix Data=create_new_matrix(1,Matrix_1.data_col);
+	for(int c=0;c<Matrix_1.data_col;c++){ // 根據時間換值還要做 
+		Data.data_matrix[0][c]=Matrix_1.data_matrix[row][c];
+	}
+	return Data;
+}
+Matrix matrix_row_sort_small_to_large(Matrix Data,int r){ // 小到大排序
+	double tmp=0.0;
+	for(int i=0;i<Data.data_col;i++){
+		for(int j=0;j<Data.data_col-1;j++){
+			if(Data.data_matrix[r][j]>Data.data_matrix[r][j+1]){
+				tmp=Data.data_matrix[r][j];
+				Data.data_matrix[r][j]=Data.data_matrix[r][j+1];
+				Data.data_matrix[r][j+1]=tmp;
+			}
+		}
+	}
+	return Data;
+}
+Matrix matrix_get_col_lable_data(Matrix Matrix_1,int c){ // 取得直行資料 欲知道種類個數(輸出層個數) 
+	Matrix Data=Matrix_1;
+	for(int i=0;i<Data.data_row;i++){	//----------找尋直行內的不重複屬性----------
+ 		for(int j=i+1;j<Data.data_row;j++){
+ 			if(Data.data_matrix[i][c]==Data.data_matrix[j][c]){  //若第二個橫排跟第一個橫排一樣 
+ 				for(int k=j+1;k<Data.data_row;k++){
+ 					Data.data_matrix[k-1][c]=Data.data_matrix[k][c]; //將第三個橫排往前放到第二個橫排 
+				}
+				--Data.data_row; //行排數量減1 
+				--j;
+			}
+		}
+	}
+	Matrix lable=create_new_matrix(1,Data.data_row);//二維矩陣的橫排排數轉成一維矩陣的col排數 
+	//---------將找到的屬性作成陣列-----------
+	for(int col=0;col<lable.data_col;col++){
+		lable.data_matrix[0][col]=Data.data_matrix[col][c]; // 矩陣成員
+	}
+	return lable;	
+}
 Matrix matrix_transpose(Matrix Matrix_1){  // 矩陣轉置 
 	Matrix Matrix_tran=create_new_matrix(Matrix_1.data_col,Matrix_1.data_row);
 	for(int i=0;i<Matrix_1.data_row;i++){
@@ -109,6 +176,14 @@ Matrix matrix_mult(Matrix Matrix_1,Matrix Matrix_2){ // 兩個矩陣相乘
 	}
 	return Matrix_sum;
 }
+Matrix matrix_mult_num(Matrix Matrix_1,double num){
+	for(int i=0;i<Matrix_1.data_row;i++){
+		for(int j=0;j<Matrix_1.data_col;j++){
+			Matrix_1.data_matrix[i][j]*=num;
+		}
+	}	
+	return Matrix_1;
+} 
 Matrix matrix_hadamard(Matrix Matrix_1,Matrix Matrix_2){ // 哈達瑪積乘法矩陣，對應位置相乘，兩個矩陣大小相等
 	Matrix Matrix_sum=create_new_matrix(Matrix_1.data_row,Matrix_2.data_col);
 	for(int i=0;i<Matrix_1.data_row;i++){
@@ -118,22 +193,6 @@ Matrix matrix_hadamard(Matrix Matrix_1,Matrix Matrix_2){ // 哈達瑪積乘法矩陣，對
 	}
 	return Matrix_sum;
 }
-Matrix matrix_sigmoid(Matrix Data){ // 所有矩陣數值皆過sigmoid函數
-	for(int r=0;r<Data.data_row;r++){
-		for(int c=0;c<Data.data_col;c++){
-			Data.data_matrix[r][c]=1/(1+exp(-Data.data_matrix[r][c]));
-		}
-	}
-	return Data;
-}
-Matrix matrix_sigmoid_der(Matrix Data){ // 所有矩陣數值皆過sigmoid導函數
-	for(int r=0;r<Data.data_row;r++){
-		for(int c=0;c<Data.data_col;c++){
-			Data.data_matrix[r][c]*=(1-Data.data_matrix[r][c]);
-		}
-	}
-	return Data;
-}
 double matrix_total_num(Matrix Data){ // 所有數值相加
 	double total=0.0;
 	for(int r=0;r<Data.data_row;r++){
@@ -142,21 +201,5 @@ double matrix_total_num(Matrix Data){ // 所有數值相加
 		}
 	}	
 	return total;
-}
-Matrix matrix_loss_function(Matrix Matrix_tag,Matrix Matrix_out){ // 損失函數( 目標矩陣，輸出矩陣 )
-	for(int r=0;r<Matrix_tag.data_row;r++){
-		for(int c=0;c<Matrix_tag.data_col;c++){
-			Matrix_out.data_matrix[r][c]=(1.0/2.0)*pow(Matrix_tag.data_matrix[r][c]-Matrix_out.data_matrix[r][c],2.0);
-		}
-	}
-	return Matrix_out;
-}
-Matrix matrix_loss_function_der(Matrix Matrix_tag,Matrix Matrix_out){ // 損失導函數( 目標矩陣，輸出矩陣 )
-	for(int r=0;r<Matrix_tag.data_row;r++){
-		for(int c=0;c<Matrix_tag.data_col;c++){
-			Matrix_out.data_matrix[r][c]=2*(1.0/2.0)*(Matrix_tag.data_matrix[r][c]-Matrix_out.data_matrix[r][c]);
-		}
-	}
-	return Matrix_out;
 }
 

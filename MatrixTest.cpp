@@ -9,17 +9,22 @@
 #include "MatrixOpApi.hpp"
 #include "MatrixTest.hpp"
 using namespace std;
-void test_create_rand_matrix(){ // OK
+void test_read_matrix_data(){
+	Matrix A=create_new_matrix(4,3);
+	read_matrix_data(A);
+	printData(A);
+}
+void test_create_rand_matrix(){ 
 	int r=2,c=3;
 	Matrix A=create_rand_matrix(r,c);
 	printData(A);
 }
-void test_create_one_matrix(){ //OK
-	int r=2,c=3;
+void test_create_one_matrix(){ 
+	int r=3,c=1;
 	Matrix A=create_one_matrix(r,c);
 	printData(A);
 }
-void test_create_zero_matrix(){ //OK
+void test_create_zero_matrix(){ 
 	int r=4,c=3;
 	Matrix A=create_zero_matrix(r,c);
 	printData(A);
@@ -28,6 +33,34 @@ void test_matrix_tran_last_col_negative(){
 	int r=2,c=3;
 	Matrix A=create_one_matrix(r,c);
 	Matrix B=matrix_tran_last_col_negative(A);
+	printData(B);
+}
+void test_matrix_delete_last_col_data(){
+	int r=2,c=3;
+	Matrix A=create_rand_matrix(r,c);
+	printData(A);
+	Matrix B=matrix_delete_last_col_data(A);
+	printData(B);
+}
+void test_matrix_row_sort_small_to_large(){
+	int r=2,c=10,n=0;
+	Matrix A=create_rand_matrix(r,c);
+	printData(A);
+	Matrix B=matrix_row_sort_small_to_large(A,n);
+	printData(B);
+}
+void test_matrix_get_one_row_data(){
+	int r=2,c=3;
+	Matrix A=create_rand_matrix(r,c);
+	printData(A);
+	Matrix B=matrix_get_one_row_data(A,0);
+	printData(B);
+}
+void test_matrix_get_col_lable_data(){
+	int r=2,c=3;
+	Matrix A=create_rand_matrix(r,c);
+	printData(A);
+	Matrix B=matrix_get_col_lable_data(A,2);
 	printData(B);
 }
 void test_matrix_transpose(){
@@ -59,6 +92,13 @@ void test_matrix_mult(){
 	Matrix C=matrix_mult(A,B);
 	printData(C);
 }
+void test_matrix_mult_num(){
+	int r=1,c=4;
+	double x=2.0;
+	Matrix A=create_one_matrix(r,c);
+	A=matrix_mult_num(A,x);
+	printData(A);
+}
 void test_matrix_hadamard(){
 	int r=2,c=3;
 	Matrix A=create_rand_matrix(r,c);
@@ -68,19 +108,6 @@ void test_matrix_hadamard(){
 	Matrix C=matrix_hadamard(A,B);
 	printData(C);
 }
-void test_matrix_sigmoid(){
-	int r=2,c=2;
-	Matrix A=create_rand_matrix(r,c);
-	Matrix B=matrix_sigmoid(A);
-	printData(B);
-}
-void test_matrix_sigmoid_der(){
-	int r=2,c=2;
-	Matrix A=create_rand_matrix(r,c);
-	printData(A);
-	Matrix B=matrix_sigmoid_der(A);
-	printData(B);
-}
 void test_matrix_total_num(){
 	int r=2,c=2;
 	Matrix A=create_one_matrix(r,c);
@@ -88,22 +115,21 @@ void test_matrix_total_num(){
 	double a=matrix_total_num(A);
 	printf("All=%f",a);
 }
-void test_matrix_loss_function(){
-	int r=2,c=3;
-	Matrix A=create_rand_matrix(r,c);
-	printData(A);
-	Matrix B=create_one_matrix(r,c);
-	printData(B);
-	Matrix C=matrix_loss_function(A,B);
-	printData(C);	
-}
-void test_matrix_loss_function_der(){
-	int r=2,c=3;
-	Matrix A=create_rand_matrix(r,c);
-	printData(A);
-	Matrix B=create_one_matrix(r,c);
-	printData(B);
-	Matrix C=matrix_loss_function_der(A,B);
-	printData(C);	
-}
-
+void test_matrix_all(){
+	test_read_matrix_data();
+	test_create_rand_matrix();
+	test_create_one_matrix();
+	test_create_zero_matrix();
+	test_matrix_tran_last_col_negative();
+	test_matrix_delete_last_col_data();
+	test_matrix_get_one_row_data();
+	test_matrix_row_sort_small_to_large();
+	test_matrix_get_col_lable_data();
+	test_matrix_transpose();
+	test_matrix_plus();
+	test_matrix_sub();
+	test_matrix_mult();
+	test_matrix_mult_num();
+	test_matrix_hadamard();
+	test_matrix_total_num();
+}     

@@ -4,8 +4,8 @@
 CPP      = g++.exe
 CC       = gcc.exe
 WINDRES  = windres.exe
-OBJ      = main.o MatrixOpApi.o MatrixTest.o
-LINKOBJ  = main.o MatrixOpApi.o MatrixTest.o
+OBJ      = main.o MatrixOpApi.o MatrixTest.o ThreeLayerNNApi.o ThreeLayerNNTest.o
+LINKOBJ  = main.o MatrixOpApi.o MatrixTest.o ThreeLayerNNApi.o ThreeLayerNNTest.o
 LIBS     = -L"D:/DevCppPortable/MinGW64/lib" -L"D:/DevCppPortable/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc
 INCS     = -I"D:/DevCppPortable/MinGW64/include" -I"D:/DevCppPortable/MinGW64/x86_64-w64-mingw32/include" -I"D:/DevCppPortable/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
 CXXINCS  = -I"D:/DevCppPortable/MinGW64/include" -I"D:/DevCppPortable/MinGW64/x86_64-w64-mingw32/include" -I"D:/DevCppPortable/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"D:/DevCppPortable/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
@@ -32,3 +32,9 @@ MatrixOpApi.o: MatrixOpApi.cpp
 
 MatrixTest.o: MatrixTest.cpp
 	$(CPP) -c MatrixTest.cpp -o MatrixTest.o $(CXXFLAGS)
+
+ThreeLayerNNApi.o: ThreeLayerNNApi.cpp
+	$(CPP) -c ThreeLayerNNApi.cpp -o ThreeLayerNNApi.o $(CXXFLAGS)
+
+ThreeLayerNNTest.o: ThreeLayerNNTest.cpp
+	$(CPP) -c ThreeLayerNNTest.cpp -o ThreeLayerNNTest.o $(CXXFLAGS)
