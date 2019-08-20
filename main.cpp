@@ -4,7 +4,7 @@
 #include "ThreeLayerNNApi.hpp"
 #include "ThreeLayerNNTest.hpp"
 int main() {
-	test_matrix_loss_function_der();
+	test();
 	return 0;
 }
 

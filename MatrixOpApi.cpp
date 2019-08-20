@@ -44,19 +44,23 @@ void printData(Matrix Data){
 		printf("\n");
 	}printf("-----------\n");
 }
-Matrix creatMatrix(double A[][3],int r,int c){
-    Matrix Data=create_new_matrix(r,c);
-    for(int i=0;i<Data.data_row;i++){
-        for(int j=0;j<Data.data_col;j++)
-            Data.data_matrix[i][j]=A[i][j];
-    }	
-    return Data;
-} 
+Matrix re_zero(Matrix Data){
+	for(int r=0;r<Data.data_row;r++){
+		for(int c=0;c<Data.data_col;c++){
+			Data.data_matrix[r][c]=0.0;
+		}
+	}
+	return Data;
+}
 Matrix create_rand_matrix(int r,int c){  // «Ø¥ß¶Ã¼Æ¯x°} 
-	srand((unsigned) time(NULL) + getpid());
+//	srand((unsigned) time(NULL) + getpid());
+//(double) rand() / (RAND_MAX + 1.0 );
+	/* ©T©w¶Ã¼ÆºØ¤l */
+ 	srand(5);
+// 	srand( time(NULL) );
 	Matrix Data=create_new_matrix(r,c);
 	for(int r=0;r<Data.data_row;r++){
-		for(int c=0;c<Data.data_col;c++){ // ®Ú¾Ú®É¶¡´«­ÈÁÙ­n°µ 
+		for(int c=0;c<Data.data_col;c++){ // ®Ú¾Ú®É¶¡´«­È
 			Data.data_matrix[r][c]=(double)rand()*2 / RAND_MAX + (-1);
 		}
 	}
@@ -66,7 +70,7 @@ Matrix create_one_matrix(int r,int c){ // «Ø¥ß¥þ³¡¬O1ªº¯x°}
 	Matrix Data=create_new_matrix(r,c);
 	for(int r=0;r<Data.data_row;r++){
 		for(int c=0;c<Data.data_col;c++){ // ®Ú¾Ú®É¶¡´«­ÈÁÙ­n°µ 
-			Data.data_matrix[r][c]=1;
+			Data.data_matrix[r][c]=1.0;
 		}
 	}
 	return Data;
@@ -75,16 +79,28 @@ Matrix create_zero_matrix(int r,int c){ // «Ø¥ß¥þ³¡¬O0ªº¯x°}
 	Matrix Data=create_new_matrix(r,c);
 	for(int r=0;r<Data.data_row;r++){
 		for(int c=0;c<Data.data_col;c++){ // ®Ú¾Ú®É¶¡´«­ÈÁÙ­n°µ 
-			Data.data_matrix[r][c]=0;
+			Data.data_matrix[r][c]=0.0;
 		}
 	}
 	return Data;
-} 
+}
 Matrix matrix_tran_last_col_negative(Matrix Data){ //³Ì«á¤@¦æÂà­t­È
 	for(int i=0;i<Data.data_row;i++){
-		Data.data_matrix[i][Data.data_col-1]=-1;
+		Data.data_matrix[i][Data.data_col-1]=-(Data.data_matrix[i][Data.data_col-1]);
 	}	
 	return Data;
+}
+Matrix matrix_add_col_one(Matrix Data){
+	Matrix Matrix_A=create_new_matrix(Data.data_row,Data.data_col+1);
+	for(int r=0;r<Data.data_row;r++){
+		for(int c=0;c<Data.data_col;c++){
+			Matrix_A.data_matrix[r][c]=Data.data_matrix[r][c];
+		}
+	}
+	for(int i=0;i<Matrix_A.data_row;i++){
+		Matrix_A.data_matrix[i][Matrix_A.data_col-1]=1.0;
+	}	
+	return Matrix_A;
 }
 Matrix matrix_delete_last_col_data(Matrix Data){  //§R°£³Ì«á¤@ª½¦æ 
 	Matrix Matrix_A=create_new_matrix(Data.data_row,Data.data_col-1);
@@ -115,7 +131,7 @@ Matrix matrix_row_sort_small_to_large(Matrix Data,int r){ // ¤p¨ì¤j±Æ§Ç
 	}
 	return Data;
 }
-Matrix matrix_get_col_lable_data(Matrix Matrix_1,int c){ // ¨ú±oª½¦æ¸ê®Æ ±ýª¾¹DºØÃþ­Ó¼Æ(¿é¥X¼h­Ó¼Æ) 
+Matrix matrix_get_col_label_data(Matrix Matrix_1,int c){ // ¨ú±oª½¦æ¸ê®Æ ±ýª¾¹DºØÃþ­Ó¼Æ(¿é¥X¼h­Ó¼Æ) 
 	Matrix Data=Matrix_1;
 	for(int i=0;i<Data.data_row;i++){	//----------§ä´Mª½¦æ¤ºªº¤£­«½ÆÄÝ©Ê----------
  		for(int j=i+1;j<Data.data_row;j++){
@@ -128,12 +144,12 @@ Matrix matrix_get_col_lable_data(Matrix Matrix_1,int c){ // ¨ú±oª½¦æ¸ê®Æ ±ýª¾¹Dº
 			}
 		}
 	}
-	Matrix lable=create_new_matrix(1,Data.data_row);//¤Gºû¯x°}ªº¾î±Æ±Æ¼ÆÂà¦¨¤@ºû¯x°}ªºcol±Æ¼Æ 
+	Matrix label=create_new_matrix(1,Data.data_row);//¤Gºû¯x°}ªº¾î±Æ±Æ¼ÆÂà¦¨¤@ºû¯x°}ªºcol±Æ¼Æ 
 	//---------±N§ä¨ìªºÄÝ©Ê§@¦¨°}¦C-----------
-	for(int col=0;col<lable.data_col;col++){
-		lable.data_matrix[0][col]=Data.data_matrix[col][c]; // ¯x°}¦¨­û
+	for(int col=0;col<label.data_col;col++){
+		label.data_matrix[0][col]=Data.data_matrix[col][c]; // ¯x°}¦¨­û
 	}
-	return lable;	
+	return label;	
 }
 Matrix matrix_transpose(Matrix Matrix_1){  // ¯x°}Âà¸m 
 	Matrix Matrix_tran=create_new_matrix(Matrix_1.data_col,Matrix_1.data_row);

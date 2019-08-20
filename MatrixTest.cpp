@@ -35,6 +35,12 @@ void test_matrix_tran_last_col_negative(){
 	Matrix B=matrix_tran_last_col_negative(A);
 	printData(B);
 }
+void test_matrix_add_col_one(){
+	int r=2,c=3;
+	Matrix A=create_one_matrix(r,c);
+	Matrix B=matrix_add_col_one(A);
+	printData(B);
+}
 void test_matrix_delete_last_col_data(){
 	int r=2,c=3;
 	Matrix A=create_rand_matrix(r,c);
@@ -56,11 +62,11 @@ void test_matrix_get_one_row_data(){
 	Matrix B=matrix_get_one_row_data(A,0);
 	printData(B);
 }
-void test_matrix_get_col_lable_data(){
+void test_matrix_get_col_label_data(){
 	int r=2,c=3;
 	Matrix A=create_rand_matrix(r,c);
 	printData(A);
-	Matrix B=matrix_get_col_lable_data(A,2);
+	Matrix B=matrix_get_col_label_data(A,2);
 	printData(B);
 }
 void test_matrix_transpose(){
@@ -70,7 +76,7 @@ void test_matrix_transpose(){
 	printData(B);
 }
 void test_matrix_plus(){
-	int r=2,c=2;
+	int r=2,c=3;
 	Matrix A=create_one_matrix(r,c);
 	Matrix B=create_one_matrix(r,c);
 	Matrix C=matrix_plus(A,B);
@@ -121,10 +127,11 @@ void test_matrix_all(){
 	test_create_one_matrix();
 	test_create_zero_matrix();
 	test_matrix_tran_last_col_negative();
+	test_matrix_add_col_one();
 	test_matrix_delete_last_col_data();
 	test_matrix_get_one_row_data();
 	test_matrix_row_sort_small_to_large();
-	test_matrix_get_col_lable_data();
+	test_matrix_get_col_label_data();
 	test_matrix_transpose();
 	test_matrix_plus();
 	test_matrix_sub();
