@@ -48,7 +48,8 @@ Matrix matrix_loss_function_der(Matrix Matrix_tag,Matrix Matrix_out){ // ·l¥¢¾É¨
 	return OUT;
 }
 Matrix label_processing(Matrix Data){
-	Matrix Label=matrix_get_col_label_data(Data,Data.data_col-1.0);
+	Matrix Label=matrix_get_col_label_data(Data,Data.data_col-1);
+//	printData(Label);
 	Label=one_hot_encoding(Data,Label);
 	return Label;
 }
@@ -68,20 +69,18 @@ Net_layer create_net_layer(int data_num,int col,int net_num){ // «Ø³y¯«¸g¼h¡A¿é¤
 }
 Matrix matrix_hidden_layer_error(Matrix weight,Matrix error){
 	Matrix Matrix_A=create_new_matrix(error.data_row,error.data_col);
-	for(int r=0;r<Matrix_A.data_row;r++){ //4
-		for(int c=0;c<Matrix_A.data_col;c++){ //2
-			for(int k=0;k<weight.data_col-1;k++){ //2
-				Matrix_A.data_matrix[r][c]+=error.data_matrix[r][k]*weight.data_matrix[k][c];
-			}
+	for(int c=0;c<Matrix_A.data_col;c++){ //2
+		for(int k=0;k<weight.data_col-1;k++){ //2
+			Matrix_A.data_matrix[0][c]+=error.data_matrix[0][k]*weight.data_matrix[k][c];
 		}
 	}
 	return Matrix_A;
 }
 Matrix one_hot_encoding(Matrix data,Matrix label){  // µ¹­ì¥»ªºdata,§ì¥Xªºlabel 
 	Matrix label_1=matrix_row_sort_small_to_large(label,0);// ±N¼ÐÅÒ{1,0}¶¶§Ç§ï¦¨{0,1) 	
-	printData(label_1);
+//	printData(label_1);
 	Matrix goal_matrix=create_new_matrix(data.data_row,label.data_col);
-	for(int i=0;i<goal_matrix.data_row;i++){
+	for(int i=0;i<data.data_row;i++){
 		for(int j=0;j<goal_matrix.data_col;j++){
 				if(data.data_matrix[i][data.data_col-1]==label_1.data_matrix[0][j])
 					goal_matrix.data_matrix[i][j]=1.0;
@@ -91,8 +90,7 @@ Matrix one_hot_encoding(Matrix data,Matrix label){  // µ¹­ì¥»ªºdata,§ì¥Xªºlabel
 	}
 	return goal_matrix;
 }
-NeuralNetwork net_forward(NeuralNetwork NN,Matrix Data,int data_order){
-	Data=matrix_get_one_row_data(Data,data_order); 
+NeuralNetwork net_forward(NeuralNetwork NN,Matrix Data){
 	NN.H_layer.w=matrix_tran_last_col_negative(NN.H_layer.w); // ±NbaisÂà¦¨­t¸¹ 
 //	printData(NN.H_layer.w);
 //	cout<<"i***********baisÂà¦¨­t¸¹***********\n"<<endl;
@@ -102,13 +100,13 @@ NeuralNetwork net_forward(NeuralNetwork NN,Matrix Data,int data_order){
 	NN.H_layer.net_sigmoid=matrix_sigmoid(NN.H_layer.net);
 //	printData(NN.H_layer.net_sigmoid);
 //	cout<<"i***********hidden_net***********\n"<<endl;
-	Data=matrix_add_col_one(NN.H_layer.net_sigmoid);
-//	printData(Data);	
+	Matrix D=matrix_add_col_one(NN.H_layer.net_sigmoid);
+//	printData(D);	
 //	cout<<"i**********-*¥[¤Fbais***********\n"<<endl;	
 	NN.O_layer.w=matrix_tran_last_col_negative(NN.O_layer.w); 
 //	printData(NN.O_layer.w);
 //	cout<<"i***********baisÂà¦¨­t¸¹***********\n"<<endl;
-	NN.O_layer.net=matrix_mult(Data,NN.O_layer.w); // ¯x°}­¼ªk¡A¦³±NÅv­«Âà¸m 
+	NN.O_layer.net=matrix_mult(D,NN.O_layer.w); // ¯x°}­¼ªk¡A¦³±NÅv­«Âà¸m 
 //	printData(NN.O_layer.net);
 //	cout<<"i***********Output_net***********\n"<<endl;
 	NN.O_layer.net_sigmoid=matrix_sigmoid(NN.O_layer.net);
@@ -116,9 +114,10 @@ NeuralNetwork net_forward(NeuralNetwork NN,Matrix Data,int data_order){
 //	cout<<"i***********¹w´ú­È***********\n"<<endl; 
 	return NN;	
 } 
-NeuralNetwork net_back(NeuralNetwork NN,Matrix Data,Matrix Label,int data_order){   //OK
-//	Matrix label=matrix_get_one_row_data(Label,data_order);
+NeuralNetwork net_back(NeuralNetwork NN,Matrix Label){   //OK
 	NN.O_layer.error=matrix_loss_function_der(Label,NN.O_layer.net_sigmoid); // ±q¿é¥X¼h©¹¦^±À (T-Y) 
+//	printData(NN.O_layer.net_sigmoid);
+//	printData(Label);
 //	printData(NN.O_layer.error);
 //	cout<<"i***********´Á±æ»P¿é¥X¶¡ªº»~®t***********\n"<<endl; 
 	Matrix Sigmoid_der=matrix_sigmoid_der(NN.O_layer.net_sigmoid);  // Sigmoid ¾É¨ç¼Æ Y(1-Y)
@@ -126,43 +125,46 @@ NeuralNetwork net_back(NeuralNetwork NN,Matrix Data,Matrix Label,int data_order)
 //	cout<<"i***********¿é¥X¼h¹w´úªºsigmoid¾É¨ç¼Æ***********\n"<<endl;
 	NN.O_layer.error=matrix_hadamard(NN.O_layer.error,Sigmoid_der); //¨Ï¥Î«¢¹Fº¿¿n¯x°}­¼ªk (T-Y)Y(1-Y) 
 //	printData(NN.O_layer.error); 
+//	printData(NN.O_layer.w); 
 //	cout<<"i***********¿é¥X¼h»~®t***********\n"<<endl;
 //	cout<<"i***********´î¥hbaisªº¿é¥X¼hÅv­«***********\n"<<endl; 
-//    printData(NN.H_layer.w);
-	Matrix Matrix_H_err=matrix_hidden_layer_error(NN.H_layer.w,NN.O_layer.error);
+	Matrix Matrix_H_err=matrix_hidden_layer_error(NN.O_layer.w,NN.O_layer.error);
+//	printData(Matrix_H_err);
 //	cout<<"i***********Åv­«ªº¿ù»~¬Û¥[***********\n"<<endl;/
 	NN.H_layer.error=matrix_sigmoid_der(NN.H_layer.net_sigmoid);  
 //	printData(Matrix_H_err); 
+//	printData(NN.H_layer.error);
 //	cout<<"i***********ÁôÂÃ¼h¹w´úªºsigmoid¾É¨ç¼Æ***********\n"<<endl;
 	NN.H_layer.error=matrix_hadamard(NN.H_layer.error,Matrix_H_err);
+//	printData(NN.H_layer.error);
 //	cout<<"i***********ÁôÂÃ¼h»~®t***********\n"<<endl;
     return NN;
 }
-NeuralNetwork net_update_weight(NeuralNetwork NN,double learning_rate,Matrix Data,int data_order){
-//	NN.H_layer.delta_w=create_new_matrix(2,3);
+NeuralNetwork net_update_weight(NeuralNetwork NN,double learning_rate,Matrix Data){
 	for(int r=0;r<NN.O_layer.delta_w.data_row;r++){
 		for(int c=0;c<NN.O_layer.delta_w.data_col-1;c++){
-			NN.O_layer.delta_w.data_matrix[r][c]=-learning_rate*NN.O_layer.error.data_matrix[0][r]*NN.H_layer.net_sigmoid.data_matrix[0][c];
+			NN.O_layer.delta_w.data_matrix[r][c]=learning_rate*NN.O_layer.error.data_matrix[0][r]*NN.H_layer.net_sigmoid.data_matrix[0][c];
 		}
 	}
 	for(int r=0;r<NN.H_layer.delta_w.data_row;r++){
 		for(int c=0;c<NN.H_layer.delta_w.data_col-1;c++){
-			NN.H_layer.delta_w.data_matrix[r][c]=-learning_rate*NN.H_layer.error.data_matrix[0][r]*Data.data_matrix[data_order][c];
+			NN.H_layer.delta_w.data_matrix[r][c]=learning_rate*NN.H_layer.error.data_matrix[0][r]*Data.data_matrix[0][c];
 		}
 	}
 	NN.O_layer.w=matrix_plus(NN.O_layer.delta_w,NN.O_layer.w);
 	NN.H_layer.w=matrix_plus(NN.H_layer.delta_w,NN.H_layer.w);
+	
 	return NN;
 }
 NeuralNetwork net_update_bais(NeuralNetwork NN,double learning_rate){
 	NN.H_layer.w=matrix_tran_last_col_negative(NN.H_layer.w);
 	NN.O_layer.w=matrix_tran_last_col_negative(NN.O_layer.w); 
 	for(int r=0;r<NN.O_layer.delta_w.data_row;r++){
-		NN.O_layer.delta_w.data_matrix[r][NN.O_layer.delta_w.data_col-1]=learning_rate*NN.O_layer.error.data_matrix[0][r];
+		NN.O_layer.delta_w.data_matrix[r][NN.O_layer.delta_w.data_col-1]=-learning_rate*NN.O_layer.error.data_matrix[0][r];
 		
 	}
 	for(int r=0;r<NN.H_layer.delta_w.data_row;r++){
-		NN.H_layer.delta_w.data_matrix[r][NN.H_layer.delta_w.data_col-1]=learning_rate*NN.H_layer.error.data_matrix[0][r];
+		NN.H_layer.delta_w.data_matrix[r][NN.H_layer.delta_w.data_col-1]=-learning_rate*NN.H_layer.error.data_matrix[0][r];
 	}
 	NN.O_layer.w=matrix_plus(NN.O_layer.delta_w,NN.O_layer.w);
 	NN.H_layer.w=matrix_plus(NN.H_layer.delta_w,NN.H_layer.w);

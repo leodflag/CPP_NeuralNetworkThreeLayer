@@ -85,10 +85,11 @@ Matrix create_zero_matrix(int r,int c){ // 建立全部是0的矩陣
 	return Data;
 }
 Matrix matrix_tran_last_col_negative(Matrix Data){ //最後一行轉負值
+	Matrix D=Data;
 	for(int i=0;i<Data.data_row;i++){
-		Data.data_matrix[i][Data.data_col-1]=-(Data.data_matrix[i][Data.data_col-1]);
+		D.data_matrix[i][D.data_col-1]=-(D.data_matrix[i][D.data_col-1]);
 	}	
-	return Data;
+	return D;
 }
 Matrix matrix_add_col_one(Matrix Data){
 	Matrix Matrix_A=create_new_matrix(Data.data_row,Data.data_col+1);

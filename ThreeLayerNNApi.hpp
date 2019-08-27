@@ -21,9 +21,9 @@ Matrix data_processing(Matrix Data);
 Matrix matrix_hidden_layer_error(Matrix weight,Matrix error);
 Net_layer create_net_layer(int data_num,int col,int net_num); // 建造神經層，輸入總資料橫行個數，直行個數，神經元個數  
 Matrix one_hot_encoding(Matrix data,Matrix label); // 做標籤 
-NeuralNetwork net_forward(NeuralNetwork NN,Matrix Data,int data_order); // 前向傳播 
-NeuralNetwork net_back(NeuralNetwork NN,Matrix Data,Matrix Label,int data_order); //倒傳遞 
-NeuralNetwork net_update_weight(NeuralNetwork NN,double learning_rate,Matrix Data,int data_order);
+NeuralNetwork net_forward(NeuralNetwork NN,Matrix Data); // 前向傳播 
+NeuralNetwork net_back(NeuralNetwork NN,Matrix Label); //倒傳遞 
+NeuralNetwork net_update_weight(NeuralNetwork NN,double learning_rate,Matrix Data);
 NeuralNetwork net_update_bais(NeuralNetwork NN,double learning_rate);
 void printALLData(NeuralNetwork NN);
 #endif
