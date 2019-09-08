@@ -26,4 +26,5 @@ NeuralNetwork net_back(NeuralNetwork NN,Matrix Label); //­Ë¶Ç»¼
 NeuralNetwork net_update_weight(NeuralNetwork NN,double learning_rate,Matrix Data);
 NeuralNetwork net_update_bais(NeuralNetwork NN,double learning_rate);
 void printALLData(NeuralNetwork NN);
+void SGD(Matrix Data,int hidden_net_num,int output_net_num,int feature_num,double learning_rate,int iteration);
 #endif

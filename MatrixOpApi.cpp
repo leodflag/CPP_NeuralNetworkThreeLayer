@@ -9,7 +9,7 @@
 #include "MatrixOpApi.hpp"
 using namespace std;
 void read_matrix_data(Matrix data){
-	ifstream file("data.csv"); //讀入檔案 
+	ifstream file("data_four.csv"); //讀入檔案 
 	for(int row=0;row<data.data_row;row++){
 		string line;
 		if(!getline(file,line))  //從輸入流讀入一行到string變量，直到沒有0讀入字符、返回false
@@ -84,6 +84,15 @@ Matrix create_zero_matrix(int r,int c){ // 建立全部是0的矩陣
 	}
 	return Data;
 }
+Matrix matrix_equal(Matrix Data){
+	Matrix Data_1=create_new_matrix(Data.data_row,Data.data_col);
+	for(int r=0;r<Data.data_row;r++){
+		for(int c=0;c<Data.data_col;c++){
+			Data_1.data_matrix[r][c]=Data.data_matrix[r][c];
+		}
+	}
+	return Data_1;
+}
 Matrix matrix_tran_last_col_negative(Matrix Data){ //最後一行轉負值
 	Matrix D=Data;
 	for(int i=0;i<Data.data_row;i++){
@@ -121,6 +130,7 @@ Matrix matrix_get_one_row_data(Matrix Matrix_1,int row){  //取得某row data
 }
 Matrix matrix_row_sort_small_to_large(Matrix Data,int r){ // 小到大排序
 	double tmp=0.0;
+//	Matrix Data1=matrix_equal(Data)
 	for(int i=0;i<Data.data_col;i++){
 		for(int j=0;j<Data.data_col-1;j++){
 			if(Data.data_matrix[r][j]>Data.data_matrix[r][j+1]){
@@ -133,22 +143,23 @@ Matrix matrix_row_sort_small_to_large(Matrix Data,int r){ // 小到大排序
 	return Data;
 }
 Matrix matrix_get_col_label_data(Matrix Matrix_1,int c){ // 取得直行資料 欲知道種類個數(輸出層個數) 
-	Matrix Data=Matrix_1;
-	for(int i=0;i<Data.data_row;i++){	//----------找尋直行內的不重複屬性----------
- 		for(int j=i+1;j<Data.data_row;j++){
- 			if(Data.data_matrix[i][c]==Data.data_matrix[j][c]){  //若第二個橫排跟第一個橫排一樣 
- 				for(int k=j+1;k<Data.data_row;k++){
- 					Data.data_matrix[k-1][c]=Data.data_matrix[k][c]; //將第三個橫排往前放到第二個橫排 
+	Matrix data_M=create_new_matrix(Matrix_1.data_row,Matrix_1.data_col);
+	data_M=matrix_equal(Matrix_1);
+	for(int i=0;i<data_M.data_row;i++){	//----------找尋直行內的不重複屬性----------
+ 		for(int j=i+1;j<data_M.data_row;j++){
+ 			if(data_M.data_matrix[i][c]==data_M.data_matrix[j][c]){  //若第二個橫排跟第一個橫排一樣 
+ 				for(int k=j+1;k<data_M.data_row;k++){
+ 					data_M.data_matrix[k-1][c]=data_M.data_matrix[k][c]; //將第三個橫排往前放到第二個橫排 
 				}
-				--Data.data_row; //行排數量減1 
+				--data_M.data_row; //行排數量減1 
 				--j;
 			}
 		}
 	}
-	Matrix label=create_new_matrix(1,Data.data_row);//二維矩陣的橫排排數轉成一維矩陣的col排數 
+	Matrix label=create_new_matrix(1,data_M.data_row);//二維矩陣的橫排排數轉成一維矩陣的col排數 
 	//---------將找到的屬性作成陣列-----------
 	for(int col=0;col<label.data_col;col++){
-		label.data_matrix[0][col]=Data.data_matrix[col][c]; // 矩陣成員
+		label.data_matrix[0][col]=data_M.data_matrix[col][c]; // 矩陣成員
 	}
 	return label;	
 }

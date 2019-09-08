@@ -29,8 +29,9 @@ void test_matrix_loss_function_der(){
 	printData(D);	
 }
 void test_label_processing(){
-	Matrix Data=create_new_matrix(4,3);
+	Matrix Data=create_new_matrix(12,3);
 	read_matrix_data(Data);
+	printData(Data);
 	Matrix label=label_processing(Data);
 	printData(label);
 }
@@ -81,70 +82,50 @@ void test_net_update_weight(){
 	NN=net_update_weight(NN,learning_rate,Data);
 	printALLData(NN);
 }
-void test_nn(){
-	int data_order=0,n=10;
+void test_SGD(){
+//	double learningRate=2.0;
+	Matrix Data=create_new_matrix(4,3);
+	read_matrix_data(Data);
+	SGD(Data,2,2,3,2.0,1000);
+//	printData()
+}
+void test(){
+	int data_order=0,n=1000;
 	double Learning_r=2.0;
 	NeuralNetwork NN;
 	NN.H_layer=create_net_layer(1,3,2);
 	NN.O_layer=create_net_layer(1,3,2);
 	Matrix Data=create_new_matrix(4,3);
 	read_matrix_data(Data);
+//	printData(Data);
 	Matrix Label=label_processing(Data);
 	Data=data_processing(Data);
 	printData(Label);
-//	while(n>0){
-//		NN=net_forward(NN,Data,data_order);
-//		printALLData(NN);
-//		Matrix Label_1=matrix_get_one_row_data(Label,data_order);
-////		printData(Label_1);
-////		printf("\n\n\n");
-//		Matrix ERROR=matrix_loss_function_der(Label_1,NN.O_layer.net_sigmoid);
-////		printData(ERROR);
-//		NN=net_back(NN,Data,Label_1,data_order);
-////		printALLData(NN);
-//		NN=net_update_weight(NN,Learning_r,Data,data_order);
-////		printALLData(NN);
-//		NN=net_update_bais(NN,Learning_r);	
-////		printALLData(NN);
-//		n--;
-//	}	
-}
-void test(){
-	int data_order=0,n=20;
-	double Learning_r=2.0;
-	NeuralNetwork NN;
-	NN.H_layer=create_net_layer(1,3,2);
-	NN.O_layer=create_net_layer(1,3,2);
-	Matrix Data=create_new_matrix(4,3);
-	read_matrix_data(Data);
-//	printData(Data);
-	Matrix Label=label_processing(Data);
-	Data=data_processing(Data);
-//	printData(Data);
 //	printALLData(NN);
 	while(n>0){
-//		while(data_order<4){
-		Matrix DATA=matrix_get_one_row_data(Data,data_order);
-//		printData(DATA);
-//		printData(NN.H_layer.w);
-		NN=net_forward(NN,DATA);
-//		printALLData(NN);
-		Matrix Label_1=matrix_get_one_row_data(Label,data_order);
-//		Matrix DDD=matrix_get_one_row_data(Data,data_order);
-		printData(NN.O_layer.net_sigmoid);
-//			printData(Label_1); 
-		Matrix ERROR=matrix_loss_function(Label_1,NN.O_layer.net_sigmoid);
-//		printData(ERROR);
-		NN=net_back(NN,Label_1);
-//		printALLData(NN);
-		NN=net_update_weight(NN,Learning_r,DATA);
-//		printALLData(NN);
-		NN=net_update_bais(NN,Learning_r);	
-//		printALLData(NN);
-//			data_order++;		
-//		}
-//		printf("-----%d----",data_order);
-//		data_order=0;
+		while(data_order<4){
+			Matrix DATA=matrix_get_one_row_data(Data,data_order);
+	//		printData(DATA);
+	//		printData(NN.H_layer.w);
+			NN=net_forward(NN,DATA);
+	//		printALLData(NN);
+			Matrix Label_1=matrix_get_one_row_data(Label,data_order);
+	//		Matrix DDD=matrix_get_one_row_data(Data,data_order);
+			printData(NN.O_layer.net_sigmoid);
+	//			printData(Label_1); 
+			Matrix ERROR=matrix_loss_function(Label_1,NN.O_layer.net_sigmoid);
+	//			printData(ERROR);
+			NN=net_back(NN,Label_1);
+	//		printALLData(NN);
+			NN=net_update_weight(NN,Learning_r,DATA);
+	//		printALLData(NN);
+			NN=net_update_bais(NN,Learning_r);	
+////		printALLData(NN);
+			data_order++;		
+		}
+		
+		printf("-----%d----\n",data_order);
+		data_order=0;
 		n--;
 	}
 }

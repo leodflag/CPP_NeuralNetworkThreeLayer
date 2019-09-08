@@ -12,6 +12,7 @@ Matrix re_zero(Matrix Data);
 Matrix create_rand_matrix(int r,int c); // ミ睹计痻皚  OK 
 Matrix create_one_matrix(int r,int c); // ミ场琌1痻皚 OK 
 Matrix create_zero_matrix(int r,int c); // ミ场琌0痻皚 OK
+Matrix matrix_equal(Matrix Data); 
 Matrix matrix_tran_last_col_negative(Matrix Data); //程︽锣璽 OK
 Matrix matrix_add_col_one(Matrix Data); // 程︽+1 
 Matrix matrix_delete_last_col_data(Matrix Data);  //埃程︽ 

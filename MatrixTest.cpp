@@ -29,6 +29,12 @@ void test_create_zero_matrix(){
 	Matrix A=create_zero_matrix(r,c);
 	printData(A);
 }
+void test_matrix_equal(){
+	int r=2,c=3;
+	Matrix A=create_one_matrix(r,c);
+	Matrix B=matrix_equal(A);
+	printData(B);
+}
 void test_matrix_tran_last_col_negative(){
 	int r=2,c=3;
 	Matrix A=create_one_matrix(r,c);

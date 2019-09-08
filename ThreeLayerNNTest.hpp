@@ -9,6 +9,6 @@ void test_create_net_layer();
 void test_one_hot_encoding();
 void test_net_forward();
 void test_net_update_weight();
-void test_nn();
+void test_SGD();
 void test();
 #endif
