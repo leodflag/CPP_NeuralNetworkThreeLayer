@@ -9,7 +9,7 @@
 #include "MatrixOpApi.hpp"
 using namespace std;
 void read_matrix_data(Matrix data){
-	ifstream file("data_four.csv"); //讀入檔案 
+	ifstream file("data.csv"); //讀入檔案  data_four  data
 	for(int row=0;row<data.data_row;row++){
 		string line;
 		if(!getline(file,line))  //從輸入流讀入一行到string變量，直到沒有0讀入字符、返回false
@@ -56,8 +56,8 @@ Matrix create_rand_matrix(int r,int c){  // 建立亂數矩陣
 //	srand((unsigned) time(NULL) + getpid());
 //(double) rand() / (RAND_MAX + 1.0 );
 	/* 固定亂數種子 */
- 	srand(5);
-// 	srand( time(NULL) );
+// 	srand(5);
+ 	srand( time(NULL) );
 	Matrix Data=create_new_matrix(r,c);
 	for(int r=0;r<Data.data_row;r++){
 		for(int c=0;c<Data.data_col;c++){ // 根據時間換值

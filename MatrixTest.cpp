@@ -18,6 +18,8 @@ void test_create_rand_matrix(){
 	int r=2,c=3;
 	Matrix A=create_rand_matrix(r,c);
 	printData(A);
+	Matrix A1=create_rand_matrix(r,c);
+	printData(A1);
 }
 void test_create_one_matrix(){ 
 	int r=3,c=1;

@@ -84,10 +84,14 @@ void test_net_update_weight(){
 }
 void test_SGD(){
 //	double learningRate=2.0;
+	// data_four.csv ¹w´ú¥¿½T¼Æ­È 
+//	Matrix Data=create_new_matrix(12,3);
+//	read_matrix_data(Data);
+//	SGD(Data,3,4,3,2.0,1000);
+	// data.csv
 	Matrix Data=create_new_matrix(4,3);
 	read_matrix_data(Data);
-	SGD(Data,2,2,3,2.0,1000);
-//	printData()
+	SGD(Data,2,2,3,0.9,1000);
 }
 void test(){
 	int data_order=0,n=1000;

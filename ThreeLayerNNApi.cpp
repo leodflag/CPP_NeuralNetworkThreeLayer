@@ -154,7 +154,6 @@ NeuralNetwork net_update_weight(NeuralNetwork NN,double learning_rate,Matrix Dat
 	}
 	NN.O_layer.w=matrix_plus(NN.O_layer.delta_w,NN.O_layer.w);
 	NN.H_layer.w=matrix_plus(NN.H_layer.delta_w,NN.H_layer.w);
-	
 	return NN;
 }
 NeuralNetwork net_update_bais(NeuralNetwork NN,double learning_rate){
@@ -162,7 +161,6 @@ NeuralNetwork net_update_bais(NeuralNetwork NN,double learning_rate){
 	NN.O_layer.w=matrix_tran_last_col_negative(NN.O_layer.w); 
 	for(int r=0;r<NN.O_layer.delta_w.data_row;r++){
 		NN.O_layer.delta_w.data_matrix[r][NN.O_layer.delta_w.data_col-1]=-learning_rate*NN.O_layer.error.data_matrix[0][r];
-		
 	}
 	for(int r=0;r<NN.H_layer.delta_w.data_row;r++){
 		NN.H_layer.delta_w.data_matrix[r][NN.H_layer.delta_w.data_col-1]=-learning_rate*NN.H_layer.error.data_matrix[0][r];
@@ -205,14 +203,16 @@ void SGD(Matrix Data,int hidden_net_num,int output_net_num,int feature_num,doubl
 			Matrix DATA=matrix_get_one_row_data(Data,data_order);
 			NN=net_forward(NN,DATA);
 			Matrix Label_1=matrix_get_one_row_data(Label,data_order);
-//			printData(NN.O_layer.net_sigmoid);
+			if(iteration==1)
+				printData(NN.O_layer.net_sigmoid);
 			Matrix ERROR=matrix_loss_function(Label_1,NN.O_layer.net_sigmoid);
-			printData(ERROR);
+//			printData(ERROR);
 			NN=net_back(NN,Label_1);
 			NN=net_update_weight(NN,learning_rate,DATA);
 			NN=net_update_bais(NN,learning_rate);	
 			data_order++;		
 		}
+//		printf("------iteration=%d------\n",iteration);
 		data_order=0;
 		iteration--;
 	}
