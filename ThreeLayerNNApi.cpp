@@ -195,7 +195,7 @@ void SGD(Matrix Data,int hidden_net_num,int output_net_num,int feature_num,doubl
 	int data_order=0;
 	NeuralNetwork NN;
 	NN.H_layer=create_net_layer(1,feature_num,hidden_net_num);
-	NN.O_layer=create_net_layer(1,hidden_net_num,output_net_num);
+	NN.O_layer=create_net_layer(1,hidden_net_num+1,output_net_num);
 	Matrix Label=label_processing(Data);
 	Data=data_processing(Data);
 	while(iteration>0){
