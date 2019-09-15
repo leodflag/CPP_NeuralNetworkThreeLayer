@@ -8,23 +8,23 @@ struct Net_layer{ // 類神經網路層，矩陣形式
 	Matrix net_sigmoid; // 預測值  row=>資料個數  col=>神經元個數
 	Matrix error; // 誤差值矩陣  row=>資料個數  col=>神經元個數
 };
-struct NeuralNetwork{
-	Net_layer H_layer;
-	Net_layer O_layer;
+struct NeuralNetwork{  // 三層神經網路的結構 
+	Net_layer H_layer; // 隱藏層 
+	Net_layer O_layer; // 輸出層 
 };
 Matrix matrix_sigmoid(Matrix Data); // 所有矩陣數值皆過sigmoid函數
 Matrix matrix_sigmoid_der(Matrix Data); // 所有矩陣數值皆過sigmoid導函數
 Matrix matrix_loss_function(Matrix Matrix_1,Matrix Matrix_2); // 損失函數( 目標矩陣，輸出矩陣 )
 Matrix matrix_loss_function_der(Matrix Matrix_1,Matrix Matrix_2);// 損失導函數( 目標矩陣，輸出矩陣 )
-Matrix label_processing(Matrix Data); 
-Matrix data_processing(Matrix Data);
-Matrix matrix_hidden_layer_error(Matrix weight,Matrix error);
+Matrix label_processing(Matrix Data);  // label 處理，取出類別標籤後用one hot encoding方式重新標籤 
+Matrix data_processing(Matrix Data);   // data 處理，切掉類別那行，填入1，作為bais相乘時的權重 
+Matrix matrix_hidden_layer_error(Matrix weight,Matrix error); // 倒傳遞時計算隱藏層錯誤的function 
 Net_layer create_net_layer(int data_num,int col,int net_num); // 建造神經層，輸入總資料橫行個數，直行個數，神經元個數  
-Matrix one_hot_encoding(Matrix data,Matrix label); // 做標籤 
+Matrix one_hot_encoding(Matrix data,Matrix label); // 標籤方式，有幾類，輸出層就有幾個神經元 
 NeuralNetwork net_forward(NeuralNetwork NN,Matrix Data); // 前向傳播 
 NeuralNetwork net_back(NeuralNetwork NN,Matrix Label); //倒傳遞 
-NeuralNetwork net_update_weight(NeuralNetwork NN,double learning_rate,Matrix Data);
-NeuralNetwork net_update_bais(NeuralNetwork NN,double learning_rate);
-void printALLData(NeuralNetwork NN);
-void SGD(Matrix Data,int hidden_net_num,int output_net_num,int feature_num,double learning_rate,int iteration);
+NeuralNetwork net_update_weight(NeuralNetwork NN,double learning_rate,Matrix Data); // 計算並更新權重 
+NeuralNetwork net_update_bais(NeuralNetwork NN,double learning_rate); // 計算並更新bais 
+void printALLData(NeuralNetwork NN); // 印出神經網路隱藏層、輸出層的數值 
+void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration); // 隨機梯度下降 
 #endif

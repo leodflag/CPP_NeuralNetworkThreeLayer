@@ -9,7 +9,7 @@
 #include "MatrixOpApi.hpp"
 #include "MatrixTest.hpp"
 using namespace std;
-void test_read_matrix_data(){
+void test_read_matrix_data(){ 
 	Matrix A=create_new_matrix(4,3);
 	read_matrix_data(A);
 	printData(A);
@@ -26,7 +26,7 @@ void test_create_one_matrix(){
 	Matrix A=create_one_matrix(r,c);
 	printData(A);
 }
-void test_create_zero_matrix(){ 
+void test_create_zero_matrix(){
 	int r=4,c=3;
 	Matrix A=create_zero_matrix(r,c);
 	printData(A);

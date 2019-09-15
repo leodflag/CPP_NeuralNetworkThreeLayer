@@ -47,103 +47,70 @@ Matrix matrix_loss_function_der(Matrix Matrix_tag,Matrix Matrix_out){ // ·l¥¢¾É¨
 	}
 	return OUT;
 }
-Matrix label_processing(Matrix Data){
-	Matrix Matrix_D=matrix_equal(Data);
-	Matrix Label=matrix_get_col_label_data(Matrix_D,Data.data_col-1);
-	printData(Label);
-	Matrix Label_1=one_hot_encoding(Matrix_D,Label);
+Matrix label_processing(Matrix Data){ // label ³B²z
+	Matrix Matrix_D=matrix_equal(Data); // ¬°Á×§K°Ê¨ì­ìDataªº¼Æ­È¡A¦]¦¹«Ø¥ß¤@­Ó·sªÅ¶¡¥h¦sDataªº¼Æ¾Ú 
+	Matrix Label=matrix_get_col_label_data(Matrix_D,Data.data_col-1); // ¨ú¥XÃþ§O¼ÐÅÒ
+	Matrix Label_1=one_hot_encoding(Matrix_D,Label); // one hot encoding¤è¦¡­«·s¼ÐÅÒ
 	return Label_1;
 }
-Matrix data_processing(Matrix Data){
-	Data=matrix_delete_last_col_data(Data);
-	Data=matrix_add_col_one(Data); 
+Matrix data_processing(Matrix Data){ // data ³B²z
+	Data=matrix_delete_last_col_data(Data); // ¤Á±¼Ãþ§O¨º¦æ
+	Data=matrix_add_col_one(Data); //  ¶ñ¤J1¡A§@¬°bais¬Û­¼®ÉªºÅv­«
 	return Data;
 }
 Net_layer create_net_layer(int data_num,int col,int net_num){ // «Ø³y¯«¸g¼h¡A¿é¤JÁ`¸ê®Æ¾î¦æ­Ó¼Æ¡Aª½¦æ­Ó¼Æ¡A¯«¸g¤¸­Ó¼Æ  
 	Net_layer NetLayer;
 	NetLayer.w=create_rand_matrix(net_num,col);  // «Ø¥ßÁôÂÃ¼hªºªì©lÅv­«¯x°}  
 	NetLayer.delta_w=create_zero_matrix(net_num,col);  // «Ø¥ß­×¥¿Åv­«¯x°} 
-	NetLayer.net=create_zero_matrix(data_num,net_num);
-	NetLayer.net_sigmoid=create_zero_matrix(data_num,net_num);
-	NetLayer.error=create_zero_matrix(data_num,net_num);
+	NetLayer.net=create_zero_matrix(data_num,net_num);  // ¥[Á`(Åv­«*¼Æ­È)+bais
+	NetLayer.net_sigmoid=create_zero_matrix(data_num,net_num);  // ¹Lsigmoid 
+	NetLayer.error=create_zero_matrix(data_num,net_num); // layerªºerror 
 	return NetLayer;
 }
-Matrix matrix_hidden_layer_error(Matrix weight,Matrix error){
-	Matrix Matrix_A=create_new_matrix(error.data_row,error.data_col);
-	for(int c=0;c<Matrix_A.data_col;c++){ //2
-		for(int k=0;k<weight.data_col-1;k++){ //2
-			Matrix_A.data_matrix[0][c]+=error.data_matrix[0][k]*weight.data_matrix[k][c];
+Matrix matrix_hidden_layer_error(Matrix weight,Matrix error){ // ­Ë¶Ç»¼®É­pºâÁôÂÃ¼h¿ù»~ªºfunction
+	Matrix Matrix_sum=create_new_matrix(error.data_row,error.data_col);
+	for(int c=0;c<Matrix_sum.data_col;c++){  //Herr_1=Oerr_1*O_1w+Oerr_1*O_2w+Oerr_1*O_3w
+		for(int k=0;k<weight.data_col-1;k++){ 
+			Matrix_sum.data_matrix[0][c]+=error.data_matrix[0][k]*weight.data_matrix[k][c];
 		}
 	}
-	return Matrix_A;
+	return Matrix_sum;
 }
 Matrix one_hot_encoding(Matrix data,Matrix label){  // µ¹­ì¥»ªºdata,§ì¥Xªºlabel 
 	Matrix label_1=matrix_row_sort_small_to_large(label,0);// ±N¼ÐÅÒ{1,0}¶¶§Ç§ï¦¨{0,1) 	
 	Matrix goal_matrix=create_new_matrix(data.data_row,label_1.data_col);
 	for(int i=0;i<data.data_row;i++){
-		for(int j=0;j<goal_matrix.data_col;j++){
+		for(int j=0;j<goal_matrix.data_col;j++){ // °²³]¼ÐÅÒ¬O012¡Adataªº¼ÐÅÒ¬O1¡AÂà´«µ²ªG¬O010 
 			if(data.data_matrix[i][data.data_col-1]==label_1.data_matrix[0][j])
-				goal_matrix.data_matrix[i][j]=1.0;
+				goal_matrix.data_matrix[i][j]=1.0; // ¼ÐÅÒ¹ïÀ³¨ì®É´N¼Ð1 
 			else
-				goal_matrix.data_matrix[i][j]=0.0;
-			
+				goal_matrix.data_matrix[i][j]=0.0; // ¨S¹ïÀ³¨ì´N¼Ð0 
 		}
 	}
 	return goal_matrix;
 }
-NeuralNetwork net_forward(NeuralNetwork NN,Matrix Data){
+NeuralNetwork net_forward(NeuralNetwork NN,Matrix Data){ // «e¦V¶Ç¼½ 
 	NN.H_layer.w=matrix_tran_last_col_negative(NN.H_layer.w); // ±NbaisÂà¦¨­t¸¹ 
-//	printData(NN.H_layer.w);
-//	cout<<"i***********baisÂà¦¨­t¸¹***********\n"<<endl;
 	NN.H_layer.net=matrix_mult(Data,NN.H_layer.w); // ¯x°}­¼ªk¡A¦³±NÅv­«Âà¸m 
-//	printData(NN.H_layer.net);
-//	cout<<"i***********¯x°}­¼ªk¡A¦³±NÅv­«Âà¸m***********\n"<<endl;
-	NN.H_layer.net_sigmoid=matrix_sigmoid(NN.H_layer.net);
-//	printData(NN.H_layer.net_sigmoid);
-//	cout<<"i***********hidden_net***********\n"<<endl;
-	Matrix D=matrix_add_col_one(NN.H_layer.net_sigmoid);
-//	printData(D);	
-//	cout<<"i**********-*¥[¤Fbais***********\n"<<endl;	
-	NN.O_layer.w=matrix_tran_last_col_negative(NN.O_layer.w); 
-//	printData(NN.O_layer.w);
-//	cout<<"i***********baisÂà¦¨­t¸¹***********\n"<<endl;
-	NN.O_layer.net=matrix_mult(D,NN.O_layer.w); // ¯x°}­¼ªk¡A¦³±NÅv­«Âà¸m 
-//	printData(NN.O_layer.net);
-//	cout<<"i***********Output_net***********\n"<<endl;
-	NN.O_layer.net_sigmoid=matrix_sigmoid(NN.O_layer.net);
-//	printData(NN.O_layer.net_sigmoid);	
-//	cout<<"i***********¹w´ú­È***********\n"<<endl; 
+	NN.H_layer.net_sigmoid=matrix_sigmoid(NN.H_layer.net); // hidden_net
+	Matrix D=matrix_add_col_one(NN.H_layer.net_sigmoid); // ¥[¤Fbais 
+	NN.O_layer.w=matrix_tran_last_col_negative(NN.O_layer.w); // baisÂà¦¨­t¸¹
+	NN.O_layer.net=matrix_mult(D,NN.O_layer.w); // ¯x°}­¼ªk¡A¦³±NÅv­«Âà¸m¡Aºâ¥XOutput_net
+	NN.O_layer.net_sigmoid=matrix_sigmoid(NN.O_layer.net); // ¹w´ú­È 
 	return NN;	
 } 
-NeuralNetwork net_back(NeuralNetwork NN,Matrix Label){   //OK
-	NN.O_layer.error=matrix_loss_function_der(Label,NN.O_layer.net_sigmoid); // ±q¿é¥X¼h©¹¦^±À (T-Y) 
-//	printData(NN.O_layer.net_sigmoid);
-//	printData(Label);
-//	printData(NN.O_layer.error);
-//	cout<<"i***********´Á±æ»P¿é¥X¶¡ªº»~®t***********\n"<<endl; 
-	Matrix Sigmoid_der=matrix_sigmoid_der(NN.O_layer.net_sigmoid);  // Sigmoid ¾É¨ç¼Æ Y(1-Y)
-//	printData(Sigmoid_der);
-//	cout<<"i***********¿é¥X¼h¹w´úªºsigmoid¾É¨ç¼Æ***********\n"<<endl;
-	NN.O_layer.error=matrix_hadamard(NN.O_layer.error,Sigmoid_der); //¨Ï¥Î«¢¹Fº¿¿n¯x°}­¼ªk (T-Y)Y(1-Y) 
-//	printData(NN.O_layer.error); 
-//	printData(NN.O_layer.w); 
-//	cout<<"i***********¿é¥X¼h»~®t***********\n"<<endl;
-//	cout<<"i***********´î¥hbaisªº¿é¥X¼hÅv­«***********\n"<<endl; 
-	Matrix Matrix_H_err=matrix_hidden_layer_error(NN.O_layer.w,NN.O_layer.error);
-//	printData(Matrix_H_err);
-//	cout<<"i***********Åv­«ªº¿ù»~¬Û¥[***********\n"<<endl;/
-	NN.H_layer.error=matrix_sigmoid_der(NN.H_layer.net_sigmoid);  
-//	printData(Matrix_H_err); 
-//	printData(NN.H_layer.error);
-//	cout<<"i***********ÁôÂÃ¼h¹w´úªºsigmoid¾É¨ç¼Æ***********\n"<<endl;
-	NN.H_layer.error=matrix_hadamard(NN.H_layer.error,Matrix_H_err);
-//	printData(NN.H_layer.error);
-//	cout<<"i***********ÁôÂÃ¼h»~®t***********\n"<<endl;
+NeuralNetwork net_back(NeuralNetwork NN,Matrix Label){   // ­Ë¶Ç»¼ 
+	NN.O_layer.error=matrix_loss_function_der(Label,NN.O_layer.net_sigmoid); // ±q¿é¥X¼h©¹¦^±À (T-Y) ´Á±æ»P¿é¥X¶¡ªº»~®t
+	Matrix Sigmoid_der=matrix_sigmoid_der(NN.O_layer.net_sigmoid);  // Sigmoid ¾É¨ç¼Æ Y(1-Y)  ¿é¥X¼h¹w´úªºsigmoid¾É¨ç¼Æ
+	NN.O_layer.error=matrix_hadamard(NN.O_layer.error,Sigmoid_der); //¨Ï¥Î«¢¹Fº¿¿n¯x°}­¼ªk (T-Y)Y(1-Y) ¿é¥X¼h»~®t
+	Matrix Matrix_H_err=matrix_hidden_layer_error(NN.O_layer.w,NN.O_layer.error); // Åv­«ªº¿ù»~¬Û¥[
+	NN.H_layer.error=matrix_sigmoid_der(NN.H_layer.net_sigmoid); //  ÁôÂÃ¼h¹w´úªºsigmoid¾É¨ç¼Æ
+	NN.H_layer.error=matrix_hadamard(NN.H_layer.error,Matrix_H_err); //  ÁôÂÃ¼h»~®t
     return NN;
 }
-NeuralNetwork net_update_weight(NeuralNetwork NN,double learning_rate,Matrix Data){
+NeuralNetwork net_update_weight(NeuralNetwork NN,double learning_rate,Matrix Data){ // §ó·sÅv­« 
 	for(int r=0;r<NN.O_layer.delta_w.data_row;r++){
-		for(int c=0;c<NN.O_layer.delta_w.data_col-1;c++){
+		for(int c=0;c<NN.O_layer.delta_w.data_col-1;c++){ // R*Oerr_1*H_sig 
 			NN.O_layer.delta_w.data_matrix[r][c]=learning_rate*NN.O_layer.error.data_matrix[0][r]*NN.H_layer.net_sigmoid.data_matrix[0][c];
 		}
 	}
@@ -156,18 +123,18 @@ NeuralNetwork net_update_weight(NeuralNetwork NN,double learning_rate,Matrix Dat
 	NN.H_layer.w=matrix_plus(NN.H_layer.delta_w,NN.H_layer.w);
 	return NN;
 }
-NeuralNetwork net_update_bais(NeuralNetwork NN,double learning_rate){
-	NN.H_layer.w=matrix_tran_last_col_negative(NN.H_layer.w);
-	NN.O_layer.w=matrix_tran_last_col_negative(NN.O_layer.w); 
-	for(int r=0;r<NN.O_layer.delta_w.data_row;r++){
+NeuralNetwork net_update_bais(NeuralNetwork NN,double learning_rate){ // §ó·sbais 
+	NN.H_layer.w=matrix_tran_last_col_negative(NN.H_layer.w); // ±N­ì¥»ªº+bais ¦b§ó·s®ÉÂà¦^ -bais 
+	NN.O_layer.w=matrix_tran_last_col_negative(NN.O_layer.w); // ±N­ì¥»ªº+bais ¦b§ó·s®ÉÂà¦^ -bais  
+	for(int r=0;r<NN.O_layer.delta_w.data_row;r++){  
 		NN.O_layer.delta_w.data_matrix[r][NN.O_layer.delta_w.data_col-1]=-learning_rate*NN.O_layer.error.data_matrix[0][r];
 	}
 	for(int r=0;r<NN.H_layer.delta_w.data_row;r++){
 		NN.H_layer.delta_w.data_matrix[r][NN.H_layer.delta_w.data_col-1]=-learning_rate*NN.H_layer.error.data_matrix[0][r];
 	}
-	NN.O_layer.w=matrix_plus(NN.O_layer.delta_w,NN.O_layer.w);
+	NN.O_layer.w=matrix_plus(NN.O_layer.delta_w,NN.O_layer.w); // »~®tÅv­«¥[¤WÅv­« 
 	NN.H_layer.w=matrix_plus(NN.H_layer.delta_w,NN.H_layer.w);
-	NN.H_layer.delta_w=re_zero(NN.H_layer.delta_w);
+	NN.H_layer.delta_w=re_zero(NN.H_layer.delta_w); // ±NÅv­«¥H¥~ªº³£Âk¹s 
 	NN.O_layer.delta_w=re_zero(NN.O_layer.delta_w);
 	NN.H_layer.net=re_zero(NN.H_layer.net);
 	NN.O_layer.net=re_zero(NN.O_layer.net);
@@ -191,25 +158,26 @@ void printALLData(NeuralNetwork NN){
 	printData(NN.O_layer.w);
 	printf("------O-------\n");
 }
-void SGD(Matrix Data,int hidden_net_num,int output_net_num,int feature_num,double learning_rate,int iteration){
+void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration){
 	int data_order=0;
 	NeuralNetwork NN;
-	NN.H_layer=create_net_layer(1,feature_num,hidden_net_num);
-	NN.O_layer=create_net_layer(1,hidden_net_num+1,output_net_num);
-	Matrix Label=label_processing(Data);
-	Data=data_processing(Data);
-	while(iteration>0){
-		while(data_order<Data.data_row){
-			Matrix DATA=matrix_get_one_row_data(Data,data_order);
-			NN=net_forward(NN,DATA);
-			Matrix Label_1=matrix_get_one_row_data(Label,data_order);
+	NN.H_layer=create_net_layer(1,data_col,hidden_net_num); // «Ø¥ßÁôÂÃ¼h 
+	NN.O_layer=create_net_layer(1,hidden_net_num+1,output_net_num); // ¿é¥X¼h©MÁôÂÃ¼h¯x°}¹Bºâ®É¡Acol­n¥[¤Wbais 
+	Matrix Label=label_processing(Data); // label ³B²z 
+	Data=data_processing(Data); // data ³B²z 
+	while(iteration>0){ // ´`Àô¦¸¼Æ 
+		while(data_order<Data.data_row){ // ´`Àô¤@µ§µ§¸ê®Æ 
+			Matrix DATA=matrix_get_one_row_data(Data,data_order); // ¨ú±o¤@µ§¸ê®Æ 
+			NN=net_forward(NN,DATA); // «e¦V¶Ç¼½ 
+			Matrix Label_1=matrix_get_one_row_data(Label,data_order); // ¨ú±o¦P¦Cªºlabel 
+//			if(iteration==1) // ¥u¦L¥X³Ì«á¤@µ§ªº¹w´úµ²ªG 
+//				printData(NN.O_layer.net_sigmoid);
+			Matrix ERROR=matrix_loss_function(Label_1,NN.O_layer.net_sigmoid); // ­pºâerror 
 			if(iteration==1)
-				printData(NN.O_layer.net_sigmoid);
-			Matrix ERROR=matrix_loss_function(Label_1,NN.O_layer.net_sigmoid);
-//			printData(ERROR);
-			NN=net_back(NN,Label_1);
-			NN=net_update_weight(NN,learning_rate,DATA);
-			NN=net_update_bais(NN,learning_rate);	
+				printData(ERROR);
+			NN=net_back(NN,Label_1); // ­Ë¶Ç»¼ 
+			NN=net_update_weight(NN,learning_rate,DATA); // ­pºâ¨Ã§ó·sÅv­« 
+			NN=net_update_bais(NN,learning_rate);  // ­pºâ¨Ã§ó·sbais 
 			data_order++;		
 		}
 //		printf("------iteration=%d------\n",iteration);

@@ -98,40 +98,5 @@ void test_SGD(){
 	SGD(Data,2,3,5,2.0,100);
 }
 void test(){
-	Matrix Data=create_new_matrix(4,3);
-	read_matrix_data(Data);
-	int hidden_net_num=2;
-	int output_net_num=2;
-	int feature_num=3;
-	double learning_rate=2.0;
-	int iteration=1;
-	int data_order=0;
-	NeuralNetwork NN;
-	NN.H_layer=create_net_layer(1,feature_num,hidden_net_num);
-	NN.O_layer=create_net_layer(1,hidden_net_num+1,output_net_num);
-	Matrix Label=label_processing(Data);
-//	printData(Data);
-	Data=data_processing(Data);
-//	printData(Data);
-	while(iteration>0){
-		while(data_order<Data.data_row){
-			Matrix DATA=matrix_get_one_row_data(Data,data_order);
-			NN=net_forward(NN,DATA);
-			Matrix Label_1=matrix_get_one_row_data(Label,data_order);
-			
-//			if(iteration==1)
-//				printData(NN.O_layer.net_sigmoid);
-			Matrix ERROR=matrix_loss_function(Label_1,NN.O_layer.net_sigmoid);
-//			printData(ERROR);
-			NN=net_back(NN,Label_1);
-			NN=net_update_weight(NN,learning_rate,DATA);
-			printALLData(NN);
-			NN=net_update_bais(NN,learning_rate);
-			printALLData(NN);	
-			data_order++;		
-		}
-//		printf("------iteration=%d------\n",iteration);
-		data_order=0;
-		iteration--;
-	}
+
 }
