@@ -17,7 +17,7 @@ void test_matrix_sub();
 void test_matrix_mult();
 void test_matrix_mult_num();
 void test_matrix_hadamard();
-void test_matrix_total_num();
+void test_matrix_total();
 void test_matrix_all();
 #endif
 

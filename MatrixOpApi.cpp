@@ -9,7 +9,7 @@
 #include "MatrixOpApi.hpp"
 using namespace std;
 void read_matrix_data(Matrix data){
-	ifstream file("data_iris.csv"); //讀入檔案  data_four  data
+	ifstream file("data_iris.csv"); //讀入檔案  data_four  data  data_iris
 	for(int row=0;row<data.data_row;row++){
 		string line;
 		if(!getline(file,line))  //從輸入流讀入一行到string變量，直到沒有0讀入字符、返回false
@@ -220,7 +220,7 @@ Matrix matrix_hadamard(Matrix Matrix_1,Matrix Matrix_2){ // 哈達瑪積乘法矩陣，對
 	}
 	return Matrix_sum;
 }
-double matrix_total_num(Matrix Data){ // 矩陣內所有數值相加
+double matrix_total(Matrix Data){ // 矩陣內所有數值相加
 	double total=0.0;
 	for(int r=0;r<Data.data_row;r++){
 		for(int c=0;c<Data.data_col;c++){

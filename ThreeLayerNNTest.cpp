@@ -73,7 +73,6 @@ void test_net_update_weight(){
 	NN.H_layer=create_net_layer(1,3,2);
 	NN.O_layer=create_net_layer(1,3,2);
 	NN.H_layer.w=create_new_matrix(r,c);
-//	printData(NN.H_layer.w);
 	NN.H_layer.error=create_rand_matrix(r,c);
 	NN.O_layer.error=create_rand_matrix(r,c);
 	NN.H_layer.net_sigmoid=create_rand_matrix(1,2);
@@ -98,5 +97,40 @@ void test_SGD(){
 	SGD(Data,2,3,5,2.0,100);
 }
 void test(){
-
+	Matrix Data=create_new_matrix(150,5);
+	read_matrix_data(Data);
+	int hidden_net_num=2;
+	int output_net_num=3;
+	int data_col=5;
+	double learning_rate=1.3;
+	int iteration=1000;
+	int data_order=0;
+	NeuralNetwork NN;
+	NN.H_layer=create_net_layer(1,data_col,hidden_net_num); // 建立隱藏層 
+	NN.O_layer=create_net_layer(1,hidden_net_num+1,output_net_num); // 輸出層和隱藏層矩陣運算時，col要加上bais 
+	Matrix Label=label_processing(Data); // label 處理 
+	Data=data_processing(Data); // data 處理 
+	while(iteration>0){ // 循環次數 
+		while(data_order<Data.data_row){ // 循環一筆筆資料 
+			Matrix DATA=matrix_get_one_row_data(Data,data_order); // 取得一筆資料 
+			NN=net_forward(NN,DATA); // 前向傳播 
+//			printData(NN.O_layer.net_sigmoid)
+			Matrix Label_1=matrix_get_one_row_data(Label,data_order); // 取得同列的label 
+//			if(iteration==1) // 只印出最後一筆的預測結果 
+//				printData(NN.O_layer.net_sigmoid);
+			Matrix ERROR=matrix_loss_function(Label_1,NN.O_layer.net_sigmoid); // 計算error
+			if(iteration==1)
+				printData(ERROR);
+			NN=net_back(NN,Label_1); // 倒傳遞 
+			NN=BGD_calculate_delta_weight(NN,learning_rate,DATA); //計算每筆數值的權重與bais並加起來 
+//			printALLData(NN);
+//			NN=net_update_weight(NN,learning_rate,DATA); // 計算並更新權重 
+//			NN=net_update_bais(NN,learning_rate);  // 計算並更新bais 
+			data_order++;		
+		}
+		NN=BGD_update_weight_and_bais(NN,4);
+//		printf("------iteration=%d------\n",iteration);
+		data_order=0;
+		iteration--;
+	}
 }

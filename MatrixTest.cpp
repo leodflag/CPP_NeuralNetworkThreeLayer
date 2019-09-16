@@ -122,11 +122,11 @@ void test_matrix_hadamard(){
 	Matrix C=matrix_hadamard(A,B);
 	printData(C);
 }
-void test_matrix_total_num(){
+void test_matrix_total(){
 	int r=2,c=2;
 	Matrix A=create_one_matrix(r,c);
 	printData(A);
-	double a=matrix_total_num(A);
+	double a=matrix_total(A);
 	printf("All=%f",a);
 }
 void test_matrix_all(){
@@ -146,5 +146,5 @@ void test_matrix_all(){
 	test_matrix_mult();
 	test_matrix_mult_num();
 	test_matrix_hadamard();
-	test_matrix_total_num();
+	test_matrix_total();
 }     

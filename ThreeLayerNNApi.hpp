@@ -25,6 +25,8 @@ NeuralNetwork net_forward(NeuralNetwork NN,Matrix Data); // 前向傳播
 NeuralNetwork net_back(NeuralNetwork NN,Matrix Label); //倒傳遞 
 NeuralNetwork net_update_weight(NeuralNetwork NN,double learning_rate,Matrix Data); // 計算並更新權重 
 NeuralNetwork net_update_bais(NeuralNetwork NN,double learning_rate); // 計算並更新bais 
+NeuralNetwork BGD_calculate_delta_weight(NeuralNetwork NN,double learning_rate,Matrix Data); //計算每筆數值的權重與bais並加起來
+NeuralNetwork BGD_update_weight_and_bais(NeuralNetwork NN,int data_row); // 更新權重與bais，要將加總的錯誤平均值算出來，除以data數 
 void printALLData(NeuralNetwork NN); // 印出神經網路隱藏層、輸出層的數值 
 void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration); // 隨機梯度下降 
 #endif

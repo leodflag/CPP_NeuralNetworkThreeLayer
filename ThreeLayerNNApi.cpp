@@ -144,6 +144,40 @@ NeuralNetwork net_update_bais(NeuralNetwork NN,double learning_rate){ // 更新bai
 	NN.O_layer.error=re_zero(NN.O_layer.error);
 	return NN;	
 }
+NeuralNetwork BGD_calculate_delta_weight(NeuralNetwork NN,double learning_rate,Matrix Data){ //計算每筆數值的權重與bais，並全部加起來 
+	NN.H_layer.w=matrix_tran_last_col_negative(NN.H_layer.w); // 將原本的+bais(T-O的關係) 在更新時轉回 -bais 
+	NN.O_layer.w=matrix_tran_last_col_negative(NN.O_layer.w); // 將原本的+bais 在更新時轉回 -bais 
+	for(int r=0;r<NN.O_layer.delta_w.data_row;r++){
+		for(int c=0;c<NN.O_layer.delta_w.data_col-1;c++) // delta_w=R*Oerr_1*H_sig // delta_bais=-R*Oerr_1 
+			NN.O_layer.delta_w.data_matrix[r][c]+=learning_rate*NN.O_layer.error.data_matrix[0][r]*NN.H_layer.net_sigmoid.data_matrix[0][c];
+		NN.O_layer.delta_w.data_matrix[r][NN.O_layer.delta_w.data_col-1]+=-learning_rate*NN.O_layer.error.data_matrix[0][r];
+	}
+	for(int r=0;r<NN.H_layer.delta_w.data_row;r++){
+		for(int c=0;c<NN.H_layer.delta_w.data_col-1;c++)
+			NN.H_layer.delta_w.data_matrix[r][c]+=learning_rate*NN.H_layer.error.data_matrix[0][r]*Data.data_matrix[0][c];
+		NN.H_layer.delta_w.data_matrix[r][NN.H_layer.delta_w.data_col-1]+=-learning_rate*NN.H_layer.error.data_matrix[0][r];
+	}
+	NN.H_layer.net=re_zero(NN.H_layer.net);
+	NN.O_layer.net=re_zero(NN.O_layer.net);
+	NN.H_layer.net_sigmoid=re_zero(NN.H_layer.net_sigmoid);
+	NN.O_layer.net_sigmoid=re_zero(NN.O_layer.net_sigmoid);
+	NN.H_layer.error=re_zero(NN.H_layer.error);
+	NN.O_layer.error=re_zero(NN.O_layer.error);
+	return NN;
+} 
+NeuralNetwork BGD_update_weight_and_bais(NeuralNetwork NN,int data_row){ // 更新權重與bais，要將加總的錯誤平均值算出來，
+//	double m=0.0;
+//	m=1.0/data_row;
+//	printf("m=%f \n",m);
+//	NN.O_layer.delta_w=matrix_mult_num(NN.O_layer.delta_w,m); // 除以data數 
+//	printData(NN.O_layer.delta_w);
+//	printData(NN.H_layer.delta_w);
+	NN.O_layer.w=matrix_plus(NN.O_layer.delta_w,NN.O_layer.w); // 誤差權重加上權重 
+	NN.H_layer.w=matrix_plus(NN.H_layer.delta_w,NN.H_layer.w);
+	NN.H_layer.delta_w=re_zero(NN.H_layer.delta_w); // 將權重以外的都歸零 
+	NN.O_layer.delta_w=re_zero(NN.O_layer.delta_w);	
+	return NN;
+} 
 void printALLData(NeuralNetwork NN){
 	printData(NN.H_layer.delta_w);
 	printData(NN.H_layer.error);
@@ -170,11 +204,11 @@ void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 			Matrix DATA=matrix_get_one_row_data(Data,data_order); // 取得一筆資料 
 			NN=net_forward(NN,DATA); // 前向傳播 
 			Matrix Label_1=matrix_get_one_row_data(Label,data_order); // 取得同列的label 
-//			if(iteration==1) // 只印出最後一筆的預測結果 
-//				printData(NN.O_layer.net_sigmoid);
-			Matrix ERROR=matrix_loss_function(Label_1,NN.O_layer.net_sigmoid); // 計算error 
-			if(iteration==1)
-				printData(ERROR);
+			if(iteration==1) // 只印出最後一筆的預測結果 
+				printData(NN.O_layer.net_sigmoid);
+			Matrix ERROR=matrix_loss_function(Label_1,NN.O_layer.net_sigmoid); // 計算error
+//			if(iteration==1)
+//				printData(ERROR);
 			NN=net_back(NN,Label_1); // 倒傳遞 
 			NN=net_update_weight(NN,learning_rate,DATA); // 計算並更新權重 
 			NN=net_update_bais(NN,learning_rate);  // 計算並更新bais 

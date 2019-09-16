@@ -25,6 +25,6 @@ Matrix matrix_sub(Matrix Matrix_1,Matrix Matrix_2); // ㄢ痻皚搭
 Matrix matrix_mult(Matrix Matrix_1,Matrix Matrix_2); // ㄢ痻皚 
 Matrix matrix_mult_num(Matrix Matrix_1,double num); // 痻皚玒计 
 Matrix matrix_hadamard(Matrix Matrix_1,Matrix Matrix_2); // 笷嚎縩猭痻皚癸莱竚ㄢ痻皚单
-double matrix_total_num(Matrix Data);  // 痻皚ず┮Τ计
+double matrix_total(Matrix Data);  // 痻皚ず┮Τ计
 #endif 
 

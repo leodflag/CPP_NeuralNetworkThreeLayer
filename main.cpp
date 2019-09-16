@@ -4,7 +4,7 @@
 #include "ThreeLayerNNApi.hpp"
 #include "ThreeLayerNNTest.hpp"
 int main() {
-	test_SGD();
+	test();
 	return 0;
 }
 
