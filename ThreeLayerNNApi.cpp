@@ -157,6 +157,8 @@ NeuralNetwork BGD_calculate_delta_weight(NeuralNetwork NN,double learning_rate,M
 			NN.H_layer.delta_w.data_matrix[r][c]+=learning_rate*NN.H_layer.error.data_matrix[0][r]*Data.data_matrix[0][c];
 		NN.H_layer.delta_w.data_matrix[r][NN.H_layer.delta_w.data_col-1]+=-learning_rate*NN.H_layer.error.data_matrix[0][r];
 	}
+//	printData(NN.O_layer.delta_w);
+//	printData(NN.H_layer.delta_w);
 	NN.H_layer.net=re_zero(NN.H_layer.net);
 	NN.O_layer.net=re_zero(NN.O_layer.net);
 	NN.H_layer.net_sigmoid=re_zero(NN.H_layer.net_sigmoid);
@@ -202,8 +204,8 @@ void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 	while(iteration>0){ // 循環次數 
 		while(data_order<Data.data_row){ // 循環一筆筆資料 
 			Matrix DATA=matrix_get_one_row_data(Data,data_order); // 取得一筆資料 
-			NN=net_forward(NN,DATA); // 前向傳播 
 			Matrix Label_1=matrix_get_one_row_data(Label,data_order); // 取得同列的label 
+			NN=net_forward(NN,DATA); // 前向傳播 
 			if(iteration==1) // 只印出最後一筆的預測結果 
 				printData(NN.O_layer.net_sigmoid);
 			Matrix ERROR=matrix_loss_function(Label_1,NN.O_layer.net_sigmoid); // 計算error
@@ -219,3 +221,37 @@ void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 		iteration--;
 	}
 }
+void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration){ // 隨機梯度下降 
+	int data_order=0;
+	NeuralNetwork NN;
+	NN.H_layer=create_net_layer(1,data_col,hidden_net_num); // 建立隱藏層 
+	NN.O_layer=create_net_layer(1,hidden_net_num+1,output_net_num); // 輸出層和隱藏層矩陣運算時，col要加上bais 
+	Matrix Label=label_processing(Data); // label 處理 
+	Data=data_processing(Data); // data 處理 
+	while(iteration>0){ // 循環次數 
+		while(data_order<Data.data_row){ // 循環一筆筆資料 
+			Matrix DATA=matrix_get_one_row_data(Data,data_order); // 取得一筆資料 
+			NN=net_forward(NN,DATA); // 前向傳播 
+//			printData(DATA);
+//			printData(NN.O_layer.net_sigmoid)
+			Matrix Label_1=matrix_get_one_row_data(Label,data_order); // 取得同列的label 
+//			printData(Label_1);
+			if(iteration==1) // 只印出最後一筆的預測結果 
+				printData(NN.O_layer.net_sigmoid);
+			Matrix ERROR=matrix_loss_function(Label_1,NN.O_layer.net_sigmoid); // 計算error
+//			if(iteration==1)
+//				printData(ERROR);
+			NN=net_back(NN,Label_1); // 倒傳遞 
+//			printALLData(NN);
+//			printf("===back----------back===\n");
+			NN=BGD_calculate_delta_weight(NN,learning_rate,DATA); //計算每筆數值的權重與bais並加起來 
+//			printALLData(NN);
+//			printf("------data_order=%d------\n\n",data_order);
+			data_order++;		
+		}
+		NN=BGD_update_weight_and_bais(NN,4);
+//		printf("------iteration=%d------\n",iteration);
+		data_order=0;
+		iteration--;
+	}
+} 

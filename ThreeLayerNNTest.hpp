@@ -10,5 +10,6 @@ void test_one_hot_encoding();
 void test_net_forward();
 void test_net_update_weight();
 void test_SGD();
+void test_BGD();
 void test();
 #endif

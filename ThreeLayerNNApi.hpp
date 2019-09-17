@@ -2,8 +2,8 @@
 #define THREELAYERNNAPI_HPP
 #include "MatrixOpApi.hpp"
 struct Net_layer{ // 類神經網路層，矩陣形式 
-	Matrix w;  // 權重矩陣，含bais 
-	Matrix delta_w; // 權重誤差 
+	Matrix w;  // 權重矩陣，含bais，row=>神經元個數  col=>特徵數 
+	Matrix delta_w; // 權重誤差 ，row=>神經元個數  col=>特徵數 
 	Matrix net; // 輸入*權重總和 row=>資料個數  col=>神經元個數
 	Matrix net_sigmoid; // 預測值  row=>資料個數  col=>神經元個數
 	Matrix error; // 誤差值矩陣  row=>資料個數  col=>神經元個數
@@ -29,4 +29,5 @@ NeuralNetwork BGD_calculate_delta_weight(NeuralNetwork NN,double learning_rate,M
 NeuralNetwork BGD_update_weight_and_bais(NeuralNetwork NN,int data_row); // 更新權重與bais，要將加總的錯誤平均值算出來，除以data數 
 void printALLData(NeuralNetwork NN); // 印出神經網路隱藏層、輸出層的數值 
 void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration); // 隨機梯度下降 
+void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration); // 隨機梯度下降 
 #endif
