@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <string>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -266,6 +267,19 @@ void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 	}
 //	save_weight(NN);
 	save_nn_structure(NN,hidden_net_num,output_net_num,data_col,learning_rate,iteration);
+	double number;
+	Matrix testData=create_one_matrix(1,data_col);
+	int feature=data_col-1;
+	int c=0;
+	while(feature!=0){
+		printf("請輸入測試資料：");
+		cin>>number;
+		testData.data_matrix[0][c]=number;
+		cout<<testData.data_matrix[0][c]<<endl;
+		c++;
+		feature--;
+	}
+	
 }
 void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration){ // 隨機梯度下降 
 	int data_order=0;
