@@ -8,6 +8,7 @@
 #include <math.h>
 #include "ThreeLayerNNApi.hpp"
 #include "MatrixOpApi.hpp"
+using namespace std;
 Matrix matrix_sigmoid(Matrix Data){ // 所有矩陣數值皆過sigmoid函數
 	Matrix Data_sig=create_new_matrix(Data.data_row,Data.data_col);
 	for(int r=0;r<Data.data_row;r++){
@@ -180,6 +181,26 @@ NeuralNetwork BGD_update_weight_and_bais(NeuralNetwork NN,int data_row){ // 更新
 	NN.O_layer.delta_w=re_zero(NN.O_layer.delta_w);	
 	return NN;
 } 
+void save_weight(NeuralNetwork NN){ // 儲存隱藏層、輸出層權重 
+	ofstream writeFile;// 寫文件，會覆蓋掉原本的資訊 
+	writeFile.open("hidden_weight.csv",ios::out);
+	for(int r=0;r<NN.H_layer.w.data_row;r++){
+		for(int c=0;c<NN.H_layer.w.data_col;c++){
+			writeFile<<NN.H_layer.w.data_matrix[r][c]<<",";
+		}
+		writeFile<<endl;
+	}
+	writeFile.close();
+	ofstream writeFile1;
+	writeFile1.open("output_weight.csv",ios::out);
+	for(int r=0;r<NN.O_layer.w.data_row;r++){
+		for(int c=0;c<NN.O_layer.w.data_col;c++){
+			writeFile1<<NN.O_layer.w.data_matrix[r][c]<<",";
+		}
+		writeFile1<<endl;
+	}
+	writeFile1.close();	
+} 
 void printALLData(NeuralNetwork NN){
 	printData(NN.H_layer.delta_w);
 	printData(NN.H_layer.error);
@@ -204,10 +225,10 @@ void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 	while(iteration>0){ // 循環次數 
 		while(data_order<Data.data_row){ // 循環一筆筆資料 
 			Matrix DATA=matrix_get_one_row_data(Data,data_order); // 取得一筆資料 
-			Matrix Label_1=matrix_get_one_row_data(Label,data_order); // 取得同列的label 
 			NN=net_forward(NN,DATA); // 前向傳播 
+			Matrix Label_1=matrix_get_one_row_data(Label,data_order); // 取得同列的label 
 			if(iteration==1) // 只印出最後一筆的預測結果 
-				printData(NN.O_layer.net_sigmoid);
+//				printData(NN.O_layer.net_sigmoid);
 			Matrix ERROR=matrix_loss_function(Label_1,NN.O_layer.net_sigmoid); // 計算error
 //			if(iteration==1)
 //				printData(ERROR);
@@ -216,10 +237,13 @@ void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 			NN=net_update_bais(NN,learning_rate);  // 計算並更新bais 
 			data_order++;		
 		}
+		
 //		printf("------iteration=%d------\n",iteration);
 		data_order=0;
 		iteration--;
 	}
+	printData(NN.H_layer.w);
+	save_weight(NN);
 }
 void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration){ // 隨機梯度下降 
 	int data_order=0;
