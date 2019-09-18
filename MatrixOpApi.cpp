@@ -56,12 +56,13 @@ Matrix create_rand_matrix(int r,int c){  // 建立亂數矩陣
 //	srand((unsigned) time(NULL) + getpid());
 //(double) rand() / (RAND_MAX + 1.0 );
 	/* 固定亂數種子 */
- 	srand(5);
-// 	srand( time(NULL) );
+// 	srand(5);
+ 	srand( time(NULL) );
 	Matrix Data=create_new_matrix(r,c);
 	for(int r=0;r<Data.data_row;r++){
 		for(int c=0;c<Data.data_col;c++){ // 根據時間換值
-			Data.data_matrix[r][c]=(double)rand()*2 / RAND_MAX + (-1);
+//			Data.data_matrix[r][c]=(double)rand()*2 / RAND_MAX + (-1);
+			Data.data_matrix[r][c]=(1.0-0.2)*rand() / (RAND_MAX + 1.0) + (0.2);
 		}
 	}
 	return Data;

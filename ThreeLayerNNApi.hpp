@@ -28,6 +28,7 @@ NeuralNetwork net_update_bais(NeuralNetwork NN,double learning_rate); // ­pºâ¨Ã§
 NeuralNetwork BGD_calculate_delta_weight(NeuralNetwork NN,double learning_rate,Matrix Data); //­pºâ¨Cµ§¼Æ­ÈªºÅv­«»Pbais¨Ã¥[°_¨Ó
 NeuralNetwork BGD_update_weight_and_bais(NeuralNetwork NN,int data_row); // §ó·sÅv­«»Pbais¡A­n±N¥[Á`ªº¿ù»~¥­§¡­Èºâ¥X¨Ó¡A°£¥Hdata¼Æ 
 void save_weight(NeuralNetwork NN); // Àx¦sÁôÂÃ¼h¡B¿é¥X¼hÅv­« 
+void save_nn_structure(NeuralNetwork NN,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration); // Àx¦s¯«¸gºô¸ô¬[ºc 
 void printALLData(NeuralNetwork NN); // ¦L¥X¯«¸gºô¸ôÁôÂÃ¼h¡B¿é¥X¼hªº¼Æ­È 
 void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration); // ÀH¾÷±è«×¤U­° 
 void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration); // ÀH¾÷±è«×¤U­° 
