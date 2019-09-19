@@ -265,21 +265,34 @@ void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 		data_order=0;
 		iteration--;
 	}
-//	save_weight(NN);
 	save_nn_structure(NN,hidden_net_num,output_net_num,data_col,learning_rate,iteration);
 	double number;
 	Matrix testData=create_one_matrix(1,data_col);
-	int feature=data_col-1;
-	int c=0;
-	while(feature!=0){
-		printf("請輸入測試資料：");
-		cin>>number;
-		testData.data_matrix[0][c]=number;
-		cout<<testData.data_matrix[0][c]<<endl;
-		c++;
-		feature--;
+	string ans="y",str;
+	while(ans=="y"){
+		int feature=data_col-1;
+		int c=0;
+		while(feature!=0){
+			printf("請輸入測試資料：");
+			while( !( cin >> number ) ){
+				cin.clear(); //清除 ios_base::failbit
+				getline( cin, str ); //清掉一行
+				cout << "請輸入數字" << endl;
+		  	}
+//			if(number)
+			testData.data_matrix[0][c]=number;
+			cout<<testData.data_matrix[0][c]<<endl;
+			c++;
+			feature--;
+		}
+		NN=net_forward(NN,testData); // 前向傳播 
+		printf("預測結果為：\n");
+		printData(NN.O_layer.net_sigmoid);	
+		printf("是否繼續預測? y/n \n");
+		cin>>ans;	
+		NN.H_layer.w=matrix_tran_last_col_negative(NN.H_layer.w); // bais轉成負號
+		NN.O_layer.w=matrix_tran_last_col_negative(NN.O_layer.w); // bais轉成負號
 	}
-	
 }
 void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration){ // 隨機梯度下降 
 	int data_order=0;
@@ -314,5 +327,32 @@ void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 		data_order=0;
 		iteration--;
 	}
-	save_weight(NN);
+	save_nn_structure(NN,hidden_net_num,output_net_num,data_col,learning_rate,iteration);
+	double number;
+	Matrix testData=create_one_matrix(1,data_col);
+	string ans="y",str;
+	while(ans=="y"){
+		int feature=data_col-1;
+		int c=0;
+		while(feature!=0){
+			printf("請輸入測試資料：");
+			while( !( cin >> number ) ){
+				cin.clear(); //清除 ios_base::failbit
+				getline( cin, str ); //清掉一行
+				cout << "請輸入數字" << endl;
+		  	}
+//			if(number)
+			testData.data_matrix[0][c]=number;
+			cout<<testData.data_matrix[0][c]<<endl;
+			c++;
+			feature--;
+		}
+		NN=net_forward(NN,testData); // 前向傳播 
+		printf("預測結果為：\n");
+		printData(NN.O_layer.net_sigmoid);	
+		printf("是否繼續預測? y/n \n");
+		cin>>ans;	
+		NN.H_layer.w=matrix_tran_last_col_negative(NN.H_layer.w); // bais轉成負號
+		NN.O_layer.w=matrix_tran_last_col_negative(NN.O_layer.w); // bais轉成負號
+	}
 } 
