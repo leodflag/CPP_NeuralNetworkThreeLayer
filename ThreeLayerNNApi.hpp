@@ -30,6 +30,6 @@ NeuralNetwork BGD_update_weight_and_bais(NeuralNetwork NN,int data_row); // 更新
 void save_weight(NeuralNetwork NN); // 儲存隱藏層、輸出層權重 
 void save_nn_structure(NeuralNetwork NN,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration); // 儲存神經網路架構 
 void printALLData(NeuralNetwork NN); // 印出神經網路隱藏層、輸出層的數值 
-void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration); // 隨機梯度下降 
+void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration,double stop_err); // 隨機梯度下降 
 void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration); // 隨機梯度下降 
 #endif

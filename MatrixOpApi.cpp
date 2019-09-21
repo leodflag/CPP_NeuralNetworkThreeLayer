@@ -61,8 +61,8 @@ Matrix create_rand_matrix(int r,int c){  // 建立亂數矩陣
 	Matrix Data=create_new_matrix(r,c);
 	for(int r=0;r<Data.data_row;r++){
 		for(int c=0;c<Data.data_col;c++){ // 根據時間換值
-//			Data.data_matrix[r][c]=(double)rand()*2 / RAND_MAX + (-1);
-			Data.data_matrix[r][c]=(1.0-0.2)*rand() / (RAND_MAX + 1.0) + (0.2);
+//			Data.data_matrix[r][c]=(double)rand()*2 / RAND_MAX + (-1);  //  權重介於-1到1之間 
+			Data.data_matrix[r][c]=(1.0-0.2)*rand() / (RAND_MAX + 1.0) + (0.2);  // 權重介於0.2到1之間 
 		}
 	}
 	return Data;

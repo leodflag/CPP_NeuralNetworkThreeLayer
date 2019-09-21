@@ -95,19 +95,19 @@ void test_SGD(){
 	// data_four.csv 
 //	Matrix Data=create_new_matrix(12,3);
 //	read_matrix_data(Data);
-//	SGD(Data,3,4,3,2.0,1000);
+//	SGD(Data,3,4,3,2.0,1000,0.05);
 	// data_two.csv
 	Matrix Data=create_new_matrix(12,3);
 	read_matrix_data(Data);
-	SGD(Data,2,2,3,2.0,1000);
+	SGD(Data,2,2,3,2.0,2000,0.05);
 	// data.csv
 //	Matrix Data=create_new_matrix(4,3);
 //	read_matrix_data(Data);
-//	SGD(Data,2,2,3,0.8,1000);
+//	SGD(Data,2,2,3,0.8,1000,0.05);
 	// data_iris.csv
 //	Matrix Data=create_new_matrix(150,5);
 //	read_matrix_data(Data);
-//	SGD(Data,2,3,5,2.0,1000);
+//	SGD(Data,2,3,5,2.0,1000,0.05);
 }
 void test_BGD(){
 	// data_four.csv ¹w´ú¥¿½T¼Æ­È 
