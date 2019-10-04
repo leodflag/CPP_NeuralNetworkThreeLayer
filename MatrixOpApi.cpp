@@ -113,6 +113,16 @@ Matrix matrix_find_max(Matrix Data){ // §ä¨ì¨C¦C³Ì¤jªºcol¦ì§}
 	}
 	return D_max;
 } 
+double matrix_compare_and_cal_error_rate(Matrix label_d,Matrix prediction_label){ // ¤ñ¸û¨Ã­pºâ¿ù»~²v 
+	int error_num=0;
+	double error_rate=0.0;
+	for(int r=0;r<label_d.data_row;r++){
+		if(label_d.data_matrix[r][0]!=prediction_label.data_matrix[r][0])
+			error_num++;
+	}
+	error_rate=(double)error_num/(double)label_d.data_row;
+	return error_rate;
+}
 Matrix matrix_tran_last_col_negative(Matrix Data){ //³Ì«á¤@¦æÂà­t­È
 	Matrix D=Data;
 	for(int i=0;i<Data.data_row;i++){
@@ -148,20 +158,7 @@ Matrix matrix_get_one_row_data(Matrix Matrix_1,int row){  //¨ú±o¬Yrow data
 	}
 	return Data;
 }
-Matrix matrix_row_sort_small_to_large(Matrix Data,int r){ // ¤p¨ì¤j±Æ§Ç
-	double tmp=0.0;
-	for(int i=0;i<Data.data_col;i++){
-		for(int j=0;j<Data.data_col-1;j++){
-			if(Data.data_matrix[r][j]>Data.data_matrix[r][j+1]){
-				tmp=Data.data_matrix[r][j];
-				Data.data_matrix[r][j]=Data.data_matrix[r][j+1];
-				Data.data_matrix[r][j+1]=tmp;
-			}
-		}
-	}
-	return Data;
-}
-Matrix matrix_get_col_label_data(Matrix Matrix_1,int c){ // ¨ú±oª½¦æ¸ê®Æ ±ýª¾¹DºØÃþ­Ó¼Æ(¿é¥X¼h­Ó¼Æ) 
+Matrix matrix_get_col_label_data(Matrix Matrix_1,int c){ // ¨ú±ocol data ±ýª¾¹DºØÃþ­Ó¼Æ(¿é¥X¼h­Ó¼Æ) 
 	Matrix data_M=create_new_matrix(Matrix_1.data_row,Matrix_1.data_col);
 	data_M=matrix_equal(Matrix_1); // ¥Î¤@­Ó·sªº¯x°}¨Ó±Æ§Ç 
 	for(int i=0;i<data_M.data_row;i++){	//----------§ä´Mª½¦æ¤ºªº¤£­«½ÆÄÝ©Ê----------
@@ -181,6 +178,19 @@ Matrix matrix_get_col_label_data(Matrix Matrix_1,int c){ // ¨ú±oª½¦æ¸ê®Æ ±ýª¾¹Dº
 		label.data_matrix[0][col]=data_M.data_matrix[col][c]; // ¯x°}¦¨­û
 	}
 	return label;	
+}
+Matrix matrix_row_sort_small_to_large(Matrix Data,int r){ // ¤p¨ì¤j±Æ§Ç
+	double tmp=0.0;
+	for(int i=0;i<Data.data_col;i++){
+		for(int j=0;j<Data.data_col-1;j++){
+			if(Data.data_matrix[r][j]>Data.data_matrix[r][j+1]){
+				tmp=Data.data_matrix[r][j];
+				Data.data_matrix[r][j]=Data.data_matrix[r][j+1];
+				Data.data_matrix[r][j+1]=tmp;
+			}
+		}
+	}
+	return Data;
 }
 Matrix matrix_transpose(Matrix Matrix_1){  // ¯x°}Âà¸m 
 	Matrix Matrix_tran=create_new_matrix(Matrix_1.data_col,Matrix_1.data_row);

@@ -43,6 +43,15 @@ void test_matrix_find_max(){
 	Matrix B=matrix_find_max(A);
 	printData(B);
 }
+void test_matrix_compare_and_cal_error_rate(){
+	Matrix A=create_rand_matrix(8,1);
+	printData(A);
+	Matrix B=matrix_equal(A);
+	B.data_matrix[1][0]=0.66;
+	printData(B);
+	double err_rate=matrix_compare_and_cal_error_rate(A,B);
+	printf("error=%f\n",err_rate);
+}
 void test_matrix_tran_last_col_negative(){
 	int r=2,c=3;
 	Matrix A=create_one_matrix(r,c);
@@ -62,13 +71,6 @@ void test_matrix_delete_last_col_data(){
 	Matrix B=matrix_delete_last_col_data(A);
 	printData(B);
 }
-void test_matrix_row_sort_small_to_large(){
-	int r=2,c=10,n=0;
-	Matrix A=create_rand_matrix(r,c);
-	printData(A);
-	Matrix B=matrix_row_sort_small_to_large(A,n);
-	printData(B);
-}
 void test_matrix_get_one_row_data(){
 	int r=2,c=3;
 	Matrix A=create_rand_matrix(r,c);
@@ -81,6 +83,13 @@ void test_matrix_get_col_label_data(){
 	Matrix A=create_rand_matrix(r,c);
 	printData(A);
 	Matrix B=matrix_get_col_label_data(A,2);
+	printData(B);
+}
+void test_matrix_row_sort_small_to_large(){
+	int r=2,c=10,n=0;
+	Matrix A=create_rand_matrix(r,c);
+	printData(A);
+	Matrix B=matrix_row_sort_small_to_large(A,n);
 	printData(B);
 }
 void test_matrix_transpose(){

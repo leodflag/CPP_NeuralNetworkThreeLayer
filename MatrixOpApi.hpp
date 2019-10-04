@@ -14,12 +14,13 @@ Matrix create_one_matrix(int r,int c); // 建立全部是1的矩陣
 Matrix create_zero_matrix(int r,int c); // 建立全部是0的矩陣 
 Matrix matrix_equal(Matrix Data); // 使矩陣相等 
 Matrix matrix_find_max(Matrix Data); // 找到每列最大的col位址 
+double matrix_compare_and_cal_error_rate(Matrix label_D,Matrix prediction_label); // 比較並計算錯誤率 
 Matrix matrix_tran_last_col_negative(Matrix Data); //最後一行轉負值 
 Matrix matrix_add_col_one(Matrix Data); // 最後一行+1 
 Matrix matrix_delete_last_col_data(Matrix Data);  //刪除最後一行 
 Matrix matrix_get_one_row_data(Matrix Matrix_1,int row);  //取得某row data 
+Matrix matrix_get_col_label_data(Matrix Matrix_1,int c); // 取得col data 欲知道種類個數(輸出層個數) 
 Matrix matrix_row_sort_small_to_large(Matrix Data,int r); // 小到大排序 
-Matrix matrix_get_col_label_data(Matrix Matrix_1,int c); // 取得直行資料 欲知道種類個數(輸出層個數) 
 Matrix matrix_transpose(Matrix Matrix_1);  // 矩陣轉置  
 Matrix matrix_plus(Matrix Matrix_1,Matrix Matrix_2); // 兩個矩陣大小相同，相加 
 Matrix matrix_sub(Matrix Matrix_1,Matrix Matrix_2); // 兩個矩陣大小相同，相減 
