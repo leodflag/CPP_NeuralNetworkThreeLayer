@@ -5,7 +5,7 @@
 #include "ThreeLayerNNTest.hpp"
 using namespace std;
 int main() {
-	test_SGD();
+	test_matrix_find_max();
 	return 0;
 }
 

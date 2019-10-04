@@ -13,6 +13,7 @@ Matrix create_rand_matrix(int r,int c); // ミ睹计痻皚
 Matrix create_one_matrix(int r,int c); // ミ场琌1痻皚 
 Matrix create_zero_matrix(int r,int c); // ミ场琌0痻皚 
 Matrix matrix_equal(Matrix Data); // ㄏ痻皚单 
+Matrix matrix_find_max(Matrix Data); // т–程col 
 Matrix matrix_tran_last_col_negative(Matrix Data); //程︽锣璽 
 Matrix matrix_add_col_one(Matrix Data); // 程︽+1 
 Matrix matrix_delete_last_col_data(Matrix Data);  //埃程︽ 

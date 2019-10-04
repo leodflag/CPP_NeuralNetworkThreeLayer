@@ -9,7 +9,7 @@
 #include "MatrixOpApi.hpp"
 using namespace std;
 void read_matrix_data(Matrix data){
-	ifstream file("data_two.csv"); //讀入檔案  data_four  data  data_iris data_two
+	ifstream file("data.csv"); //讀入檔案  data_four  data  data_iris data_two  iris1
 	for(int row=0;row<data.data_row;row++){
 		string line;
 		if(!getline(file,line))  //從輸入流讀入一行到string變量，直到沒有0讀入字符、返回false
@@ -63,6 +63,7 @@ Matrix create_rand_matrix(int r,int c){  // 建立亂數矩陣
 		for(int c=0;c<Data.data_col;c++){ // 根據時間換值
 //			Data.data_matrix[r][c]=(double)rand()*2 / RAND_MAX + (-1);  //  權重介於-1到1之間 
 			Data.data_matrix[r][c]=(1.0-0.2)*rand() / (RAND_MAX + 1.0) + (0.2);  // 權重介於0.2到1之間 
+//			Data.data_matrix[r][c]=(2.0-1.0)*rand() / (RAND_MAX + 2.0) + (2.0);  // 權重介於0.2到1之間 
 		}
 	}
 	return Data;
@@ -94,6 +95,24 @@ Matrix matrix_equal(Matrix Data){ // 使矩陣相等
 	}
 	return Data_1;
 }
+
+Matrix matrix_find_max(Matrix Data){ // 找到每列最大的col位址 
+	Matrix D_max=create_new_matrix(Data.data_row,1);
+	int Max;
+	double max_D;
+	for(int r=0;r<Data.data_row;r++){
+		Max=0;
+		max_D=0.0;
+		for(int c=0;c<Data.data_col;c++){
+			if(max_D<Data.data_matrix[r][c]){
+				max_D=Data.data_matrix[r][c];
+				Max=c;
+			}
+		}
+		D_max.data_matrix[r][0]=Max;
+	}
+	return D_max;
+} 
 Matrix matrix_tran_last_col_negative(Matrix Data){ //最後一行轉負值
 	Matrix D=Data;
 	for(int i=0;i<Data.data_row;i++){

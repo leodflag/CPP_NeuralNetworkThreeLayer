@@ -5,6 +5,7 @@ void test_create_rand_matrix();
 void test_create_one_matrix();
 void test_create_zero_matrix();
 void test_matrix_equal();
+void test_matrix_find_max();
 void test_matrix_tran_last_col_negative();
 void test_matrix_add_col_one();
 void test_matrix_delete_last_col_data();

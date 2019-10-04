@@ -259,8 +259,8 @@ void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 			err_num=matrix_total(ERROR);
 			if(err_num<stop_err*2)
 				OK_data++;
-			if(iteration==1) //如果提早結束就不會出現了 
-				printData(ERROR);
+//			if(iteration==1) //如果提早結束就不會出現了 
+//				printData(ERROR);
 			NN=net_back(NN,Label_1); // 倒傳遞 
 			NN=net_update_weight(NN,learning_rate,DATA); // 計算並更新權重 
 			NN=net_update_bais(NN,learning_rate);  // 計算並更新bais 
@@ -304,8 +304,9 @@ void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 		NN.O_layer.w=matrix_tran_last_col_negative(NN.O_layer.w); // bais轉成負號
 	}
 }
-void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration){ // 隨機梯度下降 
-	int data_order=0;
+void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration,double stop_err){ // 隨機梯度下降 
+	int data_order=0,OK_data=0;
+	double err_num;
 	NeuralNetwork NN;
 	NN.H_layer=create_net_layer(1,data_col,hidden_net_num); // 建立隱藏層 
 	NN.O_layer=create_net_layer(1,hidden_net_num+1,output_net_num); // 輸出層和隱藏層矩陣運算時，col要加上bais 
@@ -321,7 +322,11 @@ void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 //			printData(Label_1);
 			if(iteration==1) // 只印出最後一筆的預測結果 
 				printData(NN.O_layer.net_sigmoid);
+			err_num=0.0;	
 			Matrix ERROR=matrix_loss_function(Label_1,NN.O_layer.net_sigmoid); // 計算error
+			err_num=matrix_total(ERROR);
+			if(err_num<stop_err*2)
+				OK_data++;
 //			if(iteration==1)
 //				printData(ERROR);
 			NN=net_back(NN,Label_1); // 倒傳遞 
@@ -332,10 +337,15 @@ void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 //			printf("------data_order=%d------\n\n",data_order);
 			data_order++;		
 		}
-		NN=BGD_update_weight_and_bais(NN,4);
+		if(OK_data==Data.data_row)
+			break;
+		else{
+			NN=BGD_update_weight_and_bais(NN,4);
+			OK_data=0;
+			data_order=0;
+			iteration--;			
+		}
 //		printf("------iteration=%d------\n",iteration);
-		data_order=0;
-		iteration--;
 	}
 	save_nn_structure(NN,hidden_net_num,output_net_num,data_col,learning_rate,iteration);
 	double number;

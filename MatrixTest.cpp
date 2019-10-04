@@ -37,6 +37,12 @@ void test_matrix_equal(){
 	Matrix B=matrix_equal(A);
 	printData(B);
 }
+void test_matrix_find_max(){
+	Matrix A=create_rand_matrix(4,3);
+	printData(A);
+	Matrix B=matrix_find_max(A);
+	printData(B);
+}
 void test_matrix_tran_last_col_negative(){
 	int r=2,c=3;
 	Matrix A=create_one_matrix(r,c);
