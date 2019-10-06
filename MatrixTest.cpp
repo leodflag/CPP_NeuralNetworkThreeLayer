@@ -43,6 +43,12 @@ void test_matrix_find_max(){
 	Matrix B=matrix_find_max(A);
 	printData(B);
 }
+void test_matrix_find_max_col(){
+	Matrix A=create_rand_matrix(1,3);
+	printData(A);
+	int B=matrix_find_max_col(A);
+	printf("B=%d:",B);
+}
 void test_matrix_compare_and_cal_error_rate(){
 	Matrix A=create_rand_matrix(8,1);
 	printData(A);

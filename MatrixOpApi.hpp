@@ -14,11 +14,13 @@ Matrix create_one_matrix(int r,int c); // ミ场琌1痻皚
 Matrix create_zero_matrix(int r,int c); // ミ场琌0痻皚 
 Matrix matrix_equal(Matrix Data); // ㄏ痻皚单 
 Matrix matrix_find_max(Matrix Data); // т–程col 
+int matrix_find_max_col(Matrix Data); // т–程col 
 double matrix_compare_and_cal_error_rate(Matrix label_D,Matrix prediction_label); // ゑ耕璸衡岿粇瞯 
 Matrix matrix_tran_last_col_negative(Matrix Data); //程︽锣璽 
 Matrix matrix_add_col_one(Matrix Data); // 程︽+1 
 Matrix matrix_delete_last_col_data(Matrix Data);  //埃程︽ 
 Matrix matrix_get_one_row_data(Matrix Matrix_1,int row);  //眔琘row data 
+Matrix matrix_get_one_col_data(Matrix Matrix_1,int col);  //眔琘col data 
 Matrix matrix_get_col_label_data(Matrix Matrix_1,int c); // 眔col data 饼笵贺摸计(块糷计) 
 Matrix matrix_row_sort_small_to_large(Matrix Data,int r); // 逼 
 Matrix matrix_transpose(Matrix Matrix_1);  // 痻皚锣竚  

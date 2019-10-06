@@ -9,7 +9,7 @@
 #include "MatrixOpApi.hpp"
 using namespace std;
 void read_matrix_data(Matrix data){
-	ifstream file("data.csv"); //讀入檔案  data_four  data  data_iris data_two  iris1
+	ifstream file("data_iris.csv"); //讀入檔案  data_four  data  data_iris data_two  iris1
 	for(int row=0;row<data.data_row;row++){
 		string line;
 		if(!getline(file,line))  //從輸入流讀入一行到string變量，直到沒有0讀入字符、返回false
@@ -113,6 +113,19 @@ Matrix matrix_find_max(Matrix Data){ // 找到每列最大的col位址
 	}
 	return D_max;
 } 
+int matrix_find_max_col(Matrix Data){ // 找到每列最大的col位址 
+	int Max;
+	double max_D;
+	Max=0;
+	max_D=0.0;
+	for(int c=0;c<Data.data_col;c++){
+		if(max_D<Data.data_matrix[0][c]){
+			max_D=Data.data_matrix[0][c];
+			Max=c;
+		}
+	}
+	return Max;
+} 
 double matrix_compare_and_cal_error_rate(Matrix label_d,Matrix prediction_label){ // 比較並計算錯誤率 
 	int error_num=0;
 	double error_rate=0.0;
@@ -155,6 +168,13 @@ Matrix matrix_get_one_row_data(Matrix Matrix_1,int row){  //取得某row data
 	Matrix Data=create_new_matrix(1,Matrix_1.data_col);
 	for(int c=0;c<Matrix_1.data_col;c++){ // 根據時間換值還要做 
 		Data.data_matrix[0][c]=Matrix_1.data_matrix[row][c];
+	}
+	return Data;
+}
+Matrix matrix_get_one_col_data(Matrix Matrix_1,int col){  //取得某col data 
+	Matrix Data=create_new_matrix(Matrix_1.data_row,1);
+	for(int r=0;r<Matrix_1.data_row;r++){ // 根據時間換值還要做 
+		Data.data_matrix[r][0]=Matrix_1.data_matrix[r][col];
 	}
 	return Data;
 }

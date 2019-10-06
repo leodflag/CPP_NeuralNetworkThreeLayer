@@ -6,6 +6,7 @@ void test_create_one_matrix();
 void test_create_zero_matrix();
 void test_matrix_equal();
 void test_matrix_find_max();
+void test_matrix_find_max_col();
 void test_matrix_compare_and_cal_error_rate();
 void test_matrix_tran_last_col_negative();
 void test_matrix_add_col_one();

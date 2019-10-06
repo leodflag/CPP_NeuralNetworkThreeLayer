@@ -240,24 +240,30 @@ void printALLData(NeuralNetwork NN){
 	printf("------O-------\n");
 }
 void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration,double stop_err){
-	int data_order=0,OK_data=0;
-	double err_num;
+	int data_order=0,OK_data=0,cout_err_num=0,forward_label=0,real_label=0;
+	double err_num,err_rate=0.0;
 	NeuralNetwork NN;
 	NN.H_layer=create_net_layer(1,data_col,hidden_net_num); // 建立隱藏層 
 	NN.O_layer=create_net_layer(1,hidden_net_num+1,output_net_num); // 輸出層和隱藏層矩陣運算時，col要加上bais 
 	Matrix Label=label_processing(Data); // label 處理 
+	printData(Label);
 	Data=data_processing(Data); // data 處理 
 	while(iteration>0){ // 循環次數 
 		while(data_order<Data.data_row){ // 循環一筆筆資料 
 			Matrix DATA=matrix_get_one_row_data(Data,data_order); // 取得一筆資料 
 			NN=net_forward(NN,DATA); // 前向傳播 
-			Matrix Label_1=matrix_get_one_row_data(Label,data_order); // 取得同列的label 
+			Matrix Label_1=matrix_get_one_row_data(Label,data_order); // 取得同列的label
+			// 檢查預測標籤對不對 
+			forward_label=matrix_find_max_col(NN.O_layer.net_sigmoid);
+			real_label=matrix_find_max_col(Label_1);
+			if(forward_label!=real_label)
+				cout_err_num++;	
 			if(iteration==1) // 只印出最後一筆的預測結果 
 				printData(NN.O_layer.net_sigmoid);
 			err_num=0.0;
 			Matrix ERROR=matrix_loss_function(Label_1,NN.O_layer.net_sigmoid); // 計算error
 			err_num=matrix_total(ERROR);
-			if(err_num<stop_err*2)
+			if(err_num<stop_err) // 誤差值停止條件 
 				OK_data++;
 //			if(iteration==1) //如果提早結束就不會出現了 
 //				printData(ERROR);
@@ -267,12 +273,16 @@ void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 			data_order++;		
 		}
 //		printf("------iteration=%d------\n",iteration);
-		if(OK_data==Data.data_row)
+		if(OK_data==Data.data_row) // 如果分類結果小於指定誤差的行數已經是全部了，就停 
 			break;
 		else{
-			OK_data=0;
-			data_order=0;
-			iteration--;			
+			err_rate=(double)cout_err_num/Data.data_row;
+			if(iteration==1)
+				printf("err_rate=%f\n",err_rate);
+			cout_err_num=0;
+			OK_data=0;   // 分類訓練OK的數量歸零 
+			data_order=0; // 從頭訓練 
+			iteration--;  // 迭代次數減 1  
 		}
 	}
 	save_nn_structure(NN,hidden_net_num,output_net_num,data_col,learning_rate,iteration);
@@ -289,12 +299,12 @@ void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 				getline( cin, str ); //清掉一行
 				cout << "請輸入數字" << endl;
 		  	}
-//			if(number)
 			testData.data_matrix[0][c]=number;
 			cout<<testData.data_matrix[0][c]<<endl;
 			c++;
 			feature--;
 		}
+		printData(NN.H_layer.w);
 		NN=net_forward(NN,testData); // 前向傳播 
 		printf("預測結果為：\n");
 		printData(NN.O_layer.net_sigmoid);	
@@ -364,9 +374,12 @@ void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 //			if(number)
 			testData.data_matrix[0][c]=number;
 			cout<<testData.data_matrix[0][c]<<endl;
+			printData(testData);
 			c++;
 			feature--;
+			
 		}
+		printData(testData);
 		NN=net_forward(NN,testData); // 前向傳播 
 		printf("預測結果為：\n");
 		printData(NN.O_layer.net_sigmoid);	
