@@ -24,6 +24,7 @@ Matrix matrix_get_one_col_data(Matrix Matrix_1,int col);  //取得某col data
 Matrix matrix_get_col_label_data(Matrix Matrix_1,int c); // 取得col data 欲知道種類個數(輸出層個數) 
 Matrix matrix_row_sort_small_to_large(Matrix Data,int r); // 小到大排序 
 Matrix matrix_transpose(Matrix Matrix_1);  // 矩陣轉置  
+Matrix matrix_random_order(Matrix Data); // 打亂矩陣順序 
 Matrix matrix_plus(Matrix Matrix_1,Matrix Matrix_2); // 兩個矩陣大小相同，相加 
 Matrix matrix_sub(Matrix Matrix_1,Matrix Matrix_2); // 兩個矩陣大小相同，相減 
 Matrix matrix_mult(Matrix Matrix_1,Matrix Matrix_2); // 兩個矩陣相乘 

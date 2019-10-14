@@ -244,7 +244,8 @@ void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 	double err_num,err_rate=0.0;
 	NeuralNetwork NN;
 	NN.H_layer=create_net_layer(1,data_col,hidden_net_num); // 建立隱藏層 
-	NN.O_layer=create_net_layer(1,hidden_net_num+1,output_net_num); // 輸出層和隱藏層矩陣運算時，col要加上bais 
+	NN.O_layer=create_net_layer(1,hidden_net_num+1,output_net_num); // 輸出層和隱藏層矩陣運算時，col要加上bais 	
+	Data=matrix_random_order(Data); // 將數據打亂 
 	Matrix Label=label_processing(Data); // label 處理 
 	Data=data_processing(Data); // data 處理 
 	while(iteration>0){ // 循環次數 
@@ -255,26 +256,29 @@ void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 			// 檢查預測標籤對不對 
 			forward_label=matrix_find_max_col(NN.O_layer.net_sigmoid);
 			real_label=matrix_find_max_col(Label_1);
-			if(forward_label!=real_label)
+			if(forward_label!=real_label) // 計算預測錯誤的個數 
 				cout_err_num++;	
-			if(iteration==1) // 只印出最後一筆的預測結果 
-				printData(NN.O_layer.net_sigmoid);
+//			if(iteration==1) // 只印出最後一筆的預測結果 
+//				printData(NN.O_layer.net_sigmoid);
 			err_num=0.0;
-//			Matrix ERROR=matrix_loss_function(Label_1,NN.O_layer.net_sigmoid); // 計算error
-//			err_num=matrix_total(ERROR);
-//			if(err_num<stop_err) // 誤差值停止條件 
-//				OK_data++;
-//			if(iteration==1) //如果提早結束就不會出現了 
-//				printData(ERROR);
+			Matrix ERROR=matrix_loss_function(Label_1,NN.O_layer.net_sigmoid); // 計算error
+			err_num=matrix_total(ERROR);
+			if(err_num<stop_err) // 誤差值停止條件 
+				OK_data++;
+			if(iteration==1) //如果提早結束就不會出現了 
+				printData(ERROR);
 			NN=net_back(NN,Label_1); // 倒傳遞 
 			NN=net_update_weight(NN,learning_rate,DATA); // 計算並更新權重 
 			NN=net_update_bais(NN,learning_rate);  // 計算並更新bais 
 			data_order++;		
 		}
 //		printf("------iteration=%d------\n",iteration);
-		if(cout_err_num==Data.data_row) // 如果分類結果小於指定誤差的行數已經是全部了，就停 
+		if(OK_data==Data.data_row){ // 如果每個誤差值都小於設定的就離開
+		 	err_rate=(double)cout_err_num/Data.data_row; // 計算預測準確度 
+		 	printf("err_rate=%f\n",err_rate);
+			printf("------iteration=%d------\n",iteration);
 			break;
-		else{
+		}else{
 			err_rate=(double)cout_err_num/Data.data_row;
 			if(iteration==1)
 				printf("err_rate=%f\n",err_rate);
@@ -318,6 +322,7 @@ void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 	NeuralNetwork NN;
 	NN.H_layer=create_net_layer(1,data_col,hidden_net_num); // 建立隱藏層 
 	NN.O_layer=create_net_layer(1,hidden_net_num+1,output_net_num); // 輸出層和隱藏層矩陣運算時，col要加上bais 
+	Data=matrix_random_order(Data); // 將數據打亂 
 	Matrix Label=label_processing(Data); // label 處理 
 	Data=data_processing(Data); // data 處理 
 	while(iteration>0){ // 循環次數 
@@ -338,6 +343,7 @@ void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 			err_num=0.0;	
 			Matrix ERROR=matrix_loss_function(Label_1,NN.O_layer.net_sigmoid); // 計算error
 			err_num=matrix_total(ERROR);
+//			printf("err_num=%f\n",err_num);
 			if(err_num<stop_err)
 				OK_data++;
 //			if(iteration==1)
@@ -350,9 +356,12 @@ void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 //			printf("------data_order=%d------\n\n",data_order);
 			data_order++;		
 		}
-		if(OK_data==Data.data_row)
+		if(OK_data==Data.data_row){
+			err_rate=(double)cout_err_num/Data.data_row;
+			printf("err_rate=%f\n",err_rate);
+			printf("------iteration=%d------\n",iteration);
 			break;
-		else{
+		}else{
 			err_rate=(double)cout_err_num/Data.data_row;
 			if(iteration==1)
 				printf("err_rate=%f\n",err_rate);
@@ -362,7 +371,7 @@ void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 			data_order=0;
 			iteration--;			
 		}
-		printf("------iteration=%d------\n",iteration);
+//		printf("------iteration=%d------\n",iteration);
 	}
 	save_nn_structure(NN,hidden_net_num,output_net_num,data_col,learning_rate,iteration);
 	double number;

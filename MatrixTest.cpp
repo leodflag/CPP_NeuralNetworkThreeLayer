@@ -104,6 +104,14 @@ void test_matrix_transpose(){
 	Matrix B=matrix_transpose(A);
 	printData(B);
 }
+void test_matrix_random_order(){
+	int r=10,c=2;
+	Matrix A=create_rand_matrix(r,c);
+	Matrix B=matrix_random_order(A);
+	printData(A);
+	printf("-----A------\n\n");
+	printData(B);
+}
 void test_matrix_plus(){
 	int r=2,c=3;
 	Matrix A=create_one_matrix(r,c);

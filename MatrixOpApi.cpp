@@ -9,7 +9,7 @@
 #include "MatrixOpApi.hpp"
 using namespace std;
 void read_matrix_data(Matrix data){
-	ifstream file("data_four.csv"); //讀入檔案  data_four  data  data_iris data_two  iris1
+	ifstream file("data_two.csv"); //讀入檔案  data_four  data  data_iris data_two  iris1
 	for(int row=0;row<data.data_row;row++){
 		string line;
 		if(!getline(file,line))  //從輸入流讀入一行到string變量，直到沒有0讀入字符、返回false
@@ -63,7 +63,6 @@ Matrix create_rand_matrix(int r,int c){  // 建立亂數矩陣
 		for(int c=0;c<Data.data_col;c++){ // 根據時間換值
 //			Data.data_matrix[r][c]=(double)rand()*2 / RAND_MAX + (-1);  //  權重介於-1到1之間 
 			Data.data_matrix[r][c]=(1.0-0.2)*rand() / (RAND_MAX + 1.0) + (0.2);  // 權重介於0.2到1之間 
-//			Data.data_matrix[r][c]=(2.0-1.0)*rand() / (RAND_MAX + 2.0) + (2.0);  // 權重介於0.2到1之間 
 		}
 	}
 	return Data;
@@ -221,6 +220,27 @@ Matrix matrix_transpose(Matrix Matrix_1){  // 矩陣轉置
 	}	
 	return Matrix_tran;
 }
+Matrix matrix_random_order(Matrix Data){ // 打亂矩陣順序 
+	int i,rand_list[Data.data_row],temp,pos;
+	Matrix rand_Data=create_one_matrix(Data.data_row,Data.data_col);
+	srand((unsigned) time(NULL)+getpid());
+	rand_list[0]=Data.data_row-1;
+	for(i=1;i<Data.data_row;i++){ // 資料筆數排列順序 
+		rand_list[i]=i-1;
+	}
+	for(i=0;i<Data.data_row;i++){ // 打亂順序 
+		pos=(Data.data_row-1)*rand()/RAND_MAX;
+		temp=rand_list[i];
+		rand_list[i]=rand_list[pos];
+		rand_list[pos]=temp;
+	}
+	for(int r=0;r<Data.data_row;r++){ // 將數據打亂 
+		for(int c=0;c<Data.data_col;c++){
+			rand_Data.data_matrix[r][c]=Data.data_matrix[rand_list[r]][c];
+		}
+	}
+	return rand_Data;
+} 
 Matrix matrix_plus(Matrix Matrix_1,Matrix Matrix_2){ // 兩個矩陣大小相同，相加
 	Matrix Matrix_sum=create_new_matrix(Matrix_1.data_row,Matrix_1.data_col);
 	for(int i=0;i<Matrix_1.data_row;i++){

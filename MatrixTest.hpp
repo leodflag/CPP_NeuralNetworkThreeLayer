@@ -15,6 +15,7 @@ void test_matrix_get_one_row_data();
 void test_matrix_get_col_label_data();
 void test_matrix_row_sort_small_to_large();
 void test_matrix_transpose();
+void test_matrix_random_order();
 void test_matrix_plus();
 void test_matrix_sub();
 void test_matrix_mult();
