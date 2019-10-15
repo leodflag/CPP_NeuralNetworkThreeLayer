@@ -99,7 +99,7 @@ void test_SGD(){
 	// data_two.csv
 	Matrix Data=create_new_matrix(12,3);
 	read_matrix_data(Data);
-	SGD(Data,2,2,3,0.6,1000,0.05);
+	SGD(Data,2,2,3,0.6,1000,0.05,0.8);
 	// data.csv
 //	Matrix Data=create_new_matrix(4,3);
 //	read_matrix_data(Data);
@@ -121,7 +121,7 @@ void test_BGD(){
 	// data_two.csv OK
 	Matrix Data=create_new_matrix(12,3);
 	read_matrix_data(Data);
-	BGD(Data,2,2,3,0.1,1000,0.1);
+//	BGD(Data,2,2,3,0.1,1000,0.1);
 	// data.csv OK
 //	Matrix Data=create_new_matrix(4,3);
 //	read_matrix_data(Data);

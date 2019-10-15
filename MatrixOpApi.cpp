@@ -163,6 +163,16 @@ Matrix matrix_delete_last_col_data(Matrix Data){  //刪除最後一直行
 	}
 	return Matrix_A;
 }
+Matrix matrix_get_multi_row_data(Matrix Matrix_1,int start_row,int end_row){  //取得多row data 
+	int row=end_row-start_row+1;
+	Matrix Data=create_new_matrix(row,Matrix_1.data_col);
+	for(int r=0;r<row;r++){
+		for(int c=0;c<Data.data_col;c++){
+			Data.data_matrix[r][c]=Matrix_1.data_matrix[start_row+r][c];
+		}
+	}
+	return Data;
+}
 Matrix matrix_get_one_row_data(Matrix Matrix_1,int row){  //取得某row data
 	Matrix Data=create_new_matrix(1,Matrix_1.data_col);
 	for(int c=0;c<Matrix_1.data_col;c++){ // 根據時間換值還要做 

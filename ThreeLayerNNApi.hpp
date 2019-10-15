@@ -27,9 +27,11 @@ NeuralNetwork net_update_weight(NeuralNetwork NN,double learning_rate,Matrix Dat
 NeuralNetwork net_update_bais(NeuralNetwork NN,double learning_rate); // 計算並更新bais 
 NeuralNetwork BGD_calculate_delta_weight(NeuralNetwork NN,double learning_rate,Matrix Data); //計算每筆數值的權重與bais並加起來
 NeuralNetwork BGD_update_weight_and_bais(NeuralNetwork NN,int data_row); // 更新權重與bais，要將加總的錯誤平均值算出來，除以data數 
+void SGD_testing(NeuralNetwork NN,Matrix Data); // SGD的測試 
+void BGD_testing(NeuralNetwork NN,Matrix Data); // BGD的測試  
 void save_weight(NeuralNetwork NN); // 儲存隱藏層、輸出層權重 
 void save_nn_structure(NeuralNetwork NN,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration); // 儲存神經網路架構 
 void printALLData(NeuralNetwork NN); // 印出神經網路隱藏層、輸出層的數值 
-void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration,double stop_err); // 隨機梯度下降 
-void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration,double stop_err); // 隨機梯度下降 
+void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration,double stop_err,double training_rate); // 隨機梯度下降 
+void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double learning_rate,int iteration,double stop_err,double training_rate); // 隨機梯度下降 
 #endif

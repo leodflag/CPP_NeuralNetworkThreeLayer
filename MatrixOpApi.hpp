@@ -19,6 +19,7 @@ double matrix_compare_and_cal_error_rate(Matrix label_D,Matrix prediction_label)
 Matrix matrix_tran_last_col_negative(Matrix Data); //最後一行轉負值 
 Matrix matrix_add_col_one(Matrix Data); // 最後一行+1 
 Matrix matrix_delete_last_col_data(Matrix Data);  //刪除最後一行 
+Matrix matrix_get_multi_row_data(Matrix Matrix_1,int start_row,int end_row);  //取得多row data 
 Matrix matrix_get_one_row_data(Matrix Matrix_1,int row);  //取得某row data 
 Matrix matrix_get_one_col_data(Matrix Matrix_1,int col);  //取得某col data 
 Matrix matrix_get_col_label_data(Matrix Matrix_1,int c); // 取得col data 欲知道種類個數(輸出層個數) 

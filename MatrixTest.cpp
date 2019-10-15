@@ -77,6 +77,14 @@ void test_matrix_delete_last_col_data(){
 	Matrix B=matrix_delete_last_col_data(A);
 	printData(B);
 }
+void test_matrix_get_multi_row_data(){
+	int r=10,c=3;
+	Matrix A=create_rand_matrix(r,c);
+	printData(A);
+	printf("-----A------\n\n");
+	Matrix B=matrix_get_multi_row_data(A,2,8);
+	printData(B);
+}
 void test_matrix_get_one_row_data(){
 	int r=2,c=3;
 	Matrix A=create_rand_matrix(r,c);

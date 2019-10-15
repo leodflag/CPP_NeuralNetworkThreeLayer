@@ -11,6 +11,7 @@ void test_matrix_compare_and_cal_error_rate();
 void test_matrix_tran_last_col_negative();
 void test_matrix_add_col_one();
 void test_matrix_delete_last_col_data();
+void test_matrix_get_multi_row_data();
 void test_matrix_get_one_row_data();
 void test_matrix_get_col_label_data();
 void test_matrix_row_sort_small_to_large();
