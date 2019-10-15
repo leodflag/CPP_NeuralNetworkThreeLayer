@@ -9,7 +9,7 @@
 #include "MatrixOpApi.hpp"
 using namespace std;
 void read_matrix_data(Matrix data){
-	ifstream file("data_two.csv"); //讀入檔案  data_four  data  data_iris data_two  iris1
+	ifstream file("data_iris.csv"); //讀入檔案  data_four  data  data_iris data_two  iris1
 	for(int row=0;row<data.data_row;row++){
 		string line;
 		if(!getline(file,line))  //從輸入流讀入一行到string變量，直到沒有0讀入字符、返回false

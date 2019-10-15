@@ -5,7 +5,7 @@
 #include "ThreeLayerNNTest.hpp"
 using namespace std;
 int main() {
-	test_matrix_all();
+	test_BGD();
 	return 0;
 }
 
