@@ -186,11 +186,7 @@ void SGD_testing(NeuralNetwork NN,Matrix Data){ // SGD的訓練與測試
 	int data_order=0,forward_label=0,real_label=0,cout_err_num=0;
 	double err_rate=0.0;
 	Matrix Label=label_processing(Data); // label 處理 
-	printData(Label);
-	printf("SGD________label\n\n");
 	Data=data_processing(Data); // data 處理 
-	printData(Data);
-	printf("SGD________Data\n\n");
 	while(data_order<Data.data_row){ // 循環一筆筆資料 
 		Matrix DATA=matrix_get_one_row_data(Data,data_order); // 取得一筆資料 
 		NN=net_forward(NN,DATA); // 前向傳播 
@@ -198,10 +194,8 @@ void SGD_testing(NeuralNetwork NN,Matrix Data){ // SGD的訓練與測試
 		// 檢查預測標籤對不對 
 		forward_label=matrix_find_max_col(NN.O_layer.net_sigmoid);
 		real_label=matrix_find_max_col(Label_1);
-		printf("SGD______forward_label=%d,real_label=%d\n\n",forward_label,real_label);
 		if(forward_label != real_label){ // 計算預測錯誤的個數 
 			cout_err_num++;	
-			printf("cout_err_num=%d\n",cout_err_num);
 		}
 		data_order++;		
 	}
@@ -216,11 +210,7 @@ void BGD_testing(NeuralNetwork NN,Matrix Data){ // BGD的訓練與測試
 	int data_order=0,forward_label=0,real_label=0,cout_err_num=0;
 	double err_rate=0.0;
 	Matrix Label=label_processing(Data); // label 處理 
-	printData(Label);
-	printf("BGD________label\n\n");
 	Data=data_processing(Data); // data 處理 
-	printData(Data);
-	printf("BGD________Data\n\n");
 	while(data_order<Data.data_row){ // 循環一筆筆資料 
 		Matrix DATA=matrix_get_one_row_data(Data,data_order); // 取得一筆資料 
 		NN=net_forward(NN,DATA); // 前向傳播 
@@ -228,10 +218,8 @@ void BGD_testing(NeuralNetwork NN,Matrix Data){ // BGD的訓練與測試
 		// 檢查預測標籤對不對 
 		forward_label=matrix_find_max_col(NN.O_layer.net_sigmoid);
 		real_label=matrix_find_max_col(Label_1);
-		printf("SGD______forward_label=%d,real_label=%d\n\n",forward_label,real_label);
 		if(forward_label!=real_label){
 			cout_err_num++;	
-			printf("cout_err_num=%d\n",cout_err_num);
 		}
 		data_order++;		
 	}
@@ -305,11 +293,7 @@ void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 	train_row=training_rate*Data.data_row;
 	Data=matrix_random_order(Data); // 將數據打亂 
 	Matrix train_data=matrix_get_multi_row_data(Data,0,train_row-1); // 取得訓練資料 
-	printData(train_data);
-	printf("------trainData--------\n");
 	Matrix test_data=matrix_get_multi_row_data(Data,train_row,Data.data_row-1); // 取得測試資料 
-	printData(test_data);
-	printf("------test_data--------\n");
 	NeuralNetwork NN;
 	NN.H_layer=create_net_layer(1,data_col,hidden_net_num); // 建立隱藏層 
 	NN.O_layer=create_net_layer(1,hidden_net_num+1,output_net_num); // 輸出層和隱藏層矩陣運算時，col要加上bais 	
@@ -332,8 +316,8 @@ void SGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 			err_num=matrix_total(ERROR);
 			if(err_num<stop_err) // 誤差值停止條件 
 				OK_data++;
-			if(iteration==1) //如果提早結束就不會出現了 
-				printData(ERROR);
+//			if(iteration==1) //如果提早結束就不會出現了 
+//				printData(ERROR);
 			NN=net_back(NN,Label_1); // 倒傳遞 
 			NN=net_update_weight(NN,learning_rate,DATA); // 計算並更新權重 
 			NN=net_update_bais(NN,learning_rate);  // 計算並更新bais 
@@ -391,32 +375,24 @@ void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 	train_row=training_rate*Data.data_row;
 	Data=matrix_random_order(Data); // 將數據打亂 
 	Matrix train_data=matrix_get_multi_row_data(Data,0,train_row-1); // 取得訓練資料 
-	printData(train_data);
-	printf("------trainData--------\n");
 	Matrix test_data=matrix_get_multi_row_data(Data,train_row,Data.data_row-1); // 取得測試資料 
-	printData(test_data);
-	printf("------test_data--------\n");
 	NeuralNetwork NN;
 	NN.H_layer=create_net_layer(1,data_col,hidden_net_num); // 建立隱藏層 
 	NN.O_layer=create_net_layer(1,hidden_net_num+1,output_net_num); // 輸出層和隱藏層矩陣運算時，col要加上bais 
-	Data=matrix_random_order(Data); // 將數據打亂 
-	Matrix Label=label_processing(Data); // label 處理 
-	Data=data_processing(Data); // data 處理 
+	Matrix Label_train_data=label_processing(train_data); // label 處理 
+	train_data=data_processing(train_data); // data 處理 
 	while(iteration>0){ // 循環次數 
-		while(data_order<Data.data_row){ // 循環一筆筆資料 
-			Matrix DATA=matrix_get_one_row_data(Data,data_order); // 取得一筆資料 
+		while(data_order<train_data.data_row){ // 循環一筆筆資料 
+			Matrix DATA=matrix_get_one_row_data(train_data,data_order); // 取得一筆資料 
 			NN=net_forward(NN,DATA); // 前向傳播 
-			Matrix Label_1=matrix_get_one_row_data(Label,data_order); // 取得同列的label 
+			Matrix Label_1=matrix_get_one_row_data(Label_train_data,data_order); // 取得同列的label 
 			// 檢查預測標籤對不對 
 			forward_label=matrix_find_max_col(NN.O_layer.net_sigmoid);
 			real_label=matrix_find_max_col(Label_1);
 			if(forward_label!=real_label)
 				cout_err_num++;	
-//			printData(Label_1);
-//			printData(DATA);
-//			printData(NN.O_layer.net_sigmoid)
-			if(iteration==1) // 只印出最後一筆的預測結果 
-				printData(NN.O_layer.net_sigmoid);
+//			if(iteration==1) // 只印出最後一筆的預測結果 
+//				printData(NN.O_layer.net_sigmoid);
 			err_num=0.0;	
 			Matrix ERROR=matrix_loss_function(Label_1,NN.O_layer.net_sigmoid); // 計算error
 			err_num=matrix_total(ERROR);
@@ -433,17 +409,17 @@ void BGD(Matrix Data,int hidden_net_num,int output_net_num,int data_col,double l
 //			printf("------data_order=%d------\n\n",data_order);
 			data_order++;		
 		}
-		if(OK_data==Data.data_row){
-			err_rate=(double)cout_err_num/Data.data_row;
+		if(OK_data==train_data.data_row){
+			err_rate=(double)cout_err_num/train_data.data_row;
 			printf("err_rate=%f\n",err_rate);
 			printf("------iteration=%d------\n",iteration);
 			break;
 		}else{
-			err_rate=(double)cout_err_num/Data.data_row;
+			err_rate=(double)cout_err_num/train_data.data_row;
 			if(iteration==1)
 				printf("err_rate=%f\n",err_rate);
 			cout_err_num=0;
-			NN=BGD_update_weight_and_bais(NN,4);
+			NN=BGD_update_weight_and_bais(NN,train_data.data_row);
 			OK_data=0;
 			data_order=0;
 			iteration--;			
