@@ -15,4 +15,6 @@ ThreeLayerNNApi.cpp
 4. SGD()
 循環次數不對
 
+5. 矩陣乘法設計錯誤
+
 估測錯誤
